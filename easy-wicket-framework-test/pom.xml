@@ -6,7 +6,7 @@
     <parent>
         <artifactId>easy-frameworks</artifactId>
         <groupId>nl.maas.framework</groupId>
-        <version>2025.01-SNAPSHOT</version>
+        <version>2025.01</version>
     </parent>
 
 
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>nl.maas.framework</groupId>
             <artifactId>easy.torrent.framework</artifactId>
-            <version>2025.01-SNAPSHOT</version>
+            <version>2025.01</version>
         </dependency>
 
         <dependency>

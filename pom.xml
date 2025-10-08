@@ -11,7 +11,7 @@
 
     <groupId>nl.maas.framework</groupId>
     <artifactId>easy-frameworks</artifactId>
-    <version>2025.01-SNAPSHOT</version>
+    <version>2025.01</version>
     <packaging>pom</packaging>
 
     <modules>

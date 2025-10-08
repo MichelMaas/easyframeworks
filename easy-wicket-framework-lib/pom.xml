@@ -7,7 +7,7 @@
     <parent>
         <artifactId>easy-frameworks</artifactId>
         <groupId>nl.maas.framework</groupId>
-        <version>2025.01-SNAPSHOT</version>
+        <version>2025.01</version>
     </parent>
     <properties>
     </properties>
