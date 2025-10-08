@@ -1,0 +1,211 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>nl.maas.wicket.framework</groupId>
+    <artifactId>wicket.framework.lib</artifactId>
+    <parent>
+        <artifactId>easy-frameworks</artifactId>
+        <groupId>nl.maas.framework</groupId>
+        <version>2025.01-SNAPSHOT</version>
+    </parent>
+    <properties>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>Equo-Chromium</id>
+            <url>https://dl.equo.dev/chromium-swt-ce/oss/mvn</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.giffing.wicket.spring.boot.starter</groupId>
+            <artifactId>wicket-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-annotation</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.wicketstuff/wicketstuff-progressbar -->
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-progressbar</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.martinspielmann.wicket</groupId>
+            <artifactId>wicket-chartjs</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-request</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+        </dependency>
+
+
+        <!--        Bootstrap-->
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-extensions</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-less</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-themes</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>open</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-chrome-driver</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-firefox-driver -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <configuration>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                    </args>
+                    <compilerPlugins>
+                        <plugin>spring</plugin>
+                    </compilerPlugins>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>src/main/kotlin</sourceDir>
+                                <sourceDir>src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>src/test/kotlin</sourceDir>
+                                <sourceDir>src/test/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <!-- Replacing default-compile as it is treated specially by maven -->
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <!-- Replacing default-testCompile as it is treated specially by maven -->
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>java-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>java-test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <packaging>jar</packaging>
+</project>

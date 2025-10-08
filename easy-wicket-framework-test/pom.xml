@@ -1,0 +1,193 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>nl.maas.framework</groupId>
+    <artifactId>framework.test</artifactId>
+    <parent>
+        <artifactId>easy-frameworks</artifactId>
+        <groupId>nl.maas.framework</groupId>
+        <version>2025.01-SNAPSHOT</version>
+    </parent>
+
+
+    <repositories>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <!--        <dependency>-->
+        <!--            <groupId>nl.maas.wicket.framework</groupId>-->
+        <!--            <artifactId>easy-jpa-framework</artifactId>-->
+        <!--            <version>${project.version}</version>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.giffing.wicket.spring.boot.starter</groupId>
+            <artifactId>wicket-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-annotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.therealbush</groupId>
+            <artifactId>translator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-progressbar</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.martinspielmann.wicket</groupId>
+            <artifactId>wicket-chartjs</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-request</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>nl.maas.wicket.framework</groupId>
+            <artifactId>wicket.framework.lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>nl.maas.framework</groupId>
+            <artifactId>easy.torrent.framework</artifactId>
+            <version>2025.01-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+        </dependency>
+
+
+        <!--        Bootstrap-->
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-extensions</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-less</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-themes</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin.kapt</groupId>
+            <artifactId>org.jetbrains.kotlin.kapt.gradle.plugin</artifactId>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!--        <sourceDirectory>src/main/javasrc/main/kotlin</sourceDirectory>-->
+        <!--        <sourceDirectory>src/main/kotlin</sourceDirectory>-->
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${project.basedir}/target/${project.version}/</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources/html</directory>
+                <includes>
+                    <include>**/*.html</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/application.json</include>
+                    <include>**/install.sh</include>
+                    <include>**/start.bat</include>
+                    <include>**/start.sh</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>bin</directory>
+                <targetPath>../bin</targetPath>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <packaging>war</packaging>
+</project>

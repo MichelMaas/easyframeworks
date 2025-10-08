@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8">
+    <!--    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">-->
+    <!--    <link href="css/loader.css" rel="stylesheet">-->
+    <link href="images/icon.png" rel="shortcut icon" type="image/png"/>
+    <title wicket:id="title"></title>
+</head>
+
+<body class="rounded">
+<header wicket:id="navbar"/>
+<div>
+    <div class="container align-baseline">
+        <wicket:container wicket:id="loader"/>
+        <wicket:container wicket:id="outerWrapper">
+            <div wicket:id="wrapper">
+                <wicket:container wicket:id="PanelToLoad"/>
+            </div>
+        </wicket:container>
+        <wicket:child></wicket:child>
+    </div>
+</div>
+</body>
+</html>
