@@ -22,11 +22,13 @@ import org.apache.wicket.ajax.attributes.AjaxCallListener
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel
 import org.apache.wicket.markup.head.IHeaderResponse
+import org.apache.wicket.markup.head.MetaDataHeaderItem
 import org.apache.wicket.markup.html.GenericWebPage
 import org.apache.wicket.markup.html.WebMarkupContainer
 import org.apache.wicket.markup.html.basic.Label
 import org.apache.wicket.model.Model
 import org.apache.wicket.protocol.http.WebApplication
+import org.apache.wicket.resource.FileSystemResourceReference
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -97,6 +99,26 @@ abstract class RIAPage<T : ModelCache>(
         super.renderHead(response)
         CSSLoader.load(application as WebApplication, response, "/static/css/sidebar.css")
         CSSLoader.load(application as WebApplication, response, "/static/css/buttons.css")
+        renderFavIcon(response)
+    }
+
+    private fun renderFavIcon(response: IHeaderResponse) {
+
+        val faviconUrl = urlFor(iconReference, null).toString()
+
+        println("Favicon URL = $faviconUrl")
+        response.render(
+            MetaDataHeaderItem
+                .forLinkTag("icon", faviconUrl)
+                .addTagAttribute("type", "image/vnd.microsoft.icon")
+                .addTagAttribute("sizes", "any")
+        )
+
+        response.render(
+            MetaDataHeaderItem
+                .forLinkTag("icon", urlFor(iconReference, null).toString())
+                .addTagAttribute("type", "image/x-icon")
+        )
     }
 
     private fun setupWrapperContainer(): WebMarkupContainer {

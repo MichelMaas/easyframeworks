@@ -9,6 +9,7 @@
         <version>2025.01-SNAPSHOT</version>
     </parent>
 
+    <groupId>nl.maas.framework</groupId>
     <version>2026.01-SNAPSHOT</version>
     <artifactId>easy-frameworks</artifactId>
     <packaging>pom</packaging>
@@ -18,7 +19,7 @@
         <module>easy-wicket-framework-test</module>
         <module>easy-io-framework-lib</module>
         <module>easy-torrent-framework-lib</module>
-        <!--        <module>easy-jpa-framework</module>-->
+<!--        <module>easy-jpa-framework</module>-->
     </modules>
 
     <scm>
