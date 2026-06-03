@@ -9,7 +9,7 @@
         <version>2025.01-SNAPSHOT</version>
     </parent>
 
-    <version>2025.02-SNAPSHOT</version>
+    <version>2026.01-SNAPSHOT</version>
     <artifactId>easy-frameworks</artifactId>
     <packaging>pom</packaging>
 
