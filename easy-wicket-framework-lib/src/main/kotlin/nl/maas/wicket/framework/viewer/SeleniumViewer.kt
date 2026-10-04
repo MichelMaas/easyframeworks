@@ -4,29 +4,21 @@ import com.vaadin.open.App
 import com.vaadin.open.Open
 import com.vaadin.open.Options
 import io.github.bonigarcia.wdm.WebDriverManager
-import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriverException
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.WebDriverWait
-import java.time.Duration
 import java.util.*
 
 
-private const val DEFAULT_TIME_OUT: Long = 1
-
-object ScrapeViewer : Viewer() {
+object SeleniumViewer : Viewer() {
 
 
-    private lateinit var driver: WebDriver
-    private var windowHandle: String = ""
+    lateinit var driver: WebDriver
     var app = App.CHROME
     val os =
         if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("win")) "win" else System.getProperty(
@@ -39,51 +31,6 @@ object ScrapeViewer : Viewer() {
         startWebDriver(url)
     }
 
-    fun navigateTo(url: String): Boolean {
-        try {
-            driver.get(url)
-            return true
-        } catch (e: Exception) {
-            return false
-        }
-    }
-
-    fun findElementsByClass(className: String, timeOut: Long = DEFAULT_TIME_OUT): List<WebElement> {
-        val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
-        return try {
-            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.className(className))).filterNotNull()
-        } catch (e: Exception) {
-            listOf<WebElement>()
-        }
-    }
-
-    fun findElementsByTagName(tagName: String, timeOut: Long = DEFAULT_TIME_OUT): List<WebElement> {
-        val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
-        return try {
-            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName(tagName))).filterNotNull()
-        } catch (e: Exception) {
-            listOf<WebElement>()
-        }
-    }
-
-    fun findElementById(id: String, timeOut: Long = DEFAULT_TIME_OUT): WebElement? {
-        val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
-        return try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id)))
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun findElementsByCSSSelector(cssSelector: String, timeOut: Long = DEFAULT_TIME_OUT): List<WebElement> {
-        val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
-        return try {
-            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(cssSelector))).filterNotNull()
-        } catch (e: Exception) {
-            listOf<WebElement>()
-        }
-    }
-
     private fun openBrowser(url: String) {
         val options = Options()
         options.isNewInstance = true
@@ -91,7 +38,7 @@ object ScrapeViewer : Viewer() {
     }
 
     override fun close() {
-        driver.switchTo().window(windowHandle).close()
+        driver.close()
     }
 
     private fun startWebDriver(url: String) {
@@ -103,7 +50,7 @@ object ScrapeViewer : Viewer() {
             App.EDGE -> setUpEdgeDriver(url)
             else -> setUpGeckoDriver(url)
         }
-        windowHandle = driver.windowHandle
+        checkStatus(driver)
     }
 
     private fun setUpGeckoDriver(url: String) {
@@ -114,8 +61,9 @@ object ScrapeViewer : Viewer() {
         }
         driver = FirefoxDriver(options)
         driver[url]
-//        driver.manage().window().maximize()
+        driver.manage().window().maximize()
 
+        checkStatus(driver)
     }
 
     private fun setUpEdgeDriver(url: String) {
@@ -132,6 +80,7 @@ object ScrapeViewer : Viewer() {
         driver = EdgeDriver(options)
         driver[url]
         driver.manage().window().maximize()
+        checkStatus(driver)
     }
 
     private fun setUpChromeDriver(url: String) {
@@ -157,6 +106,19 @@ object ScrapeViewer : Viewer() {
             } else {
                 throw ex
             }
+        }
+    }
+
+    private fun checkStatus(driver: WebDriver) {
+        try {
+            while (driver.manage().window().size.height > 0) {
+                Thread.sleep(1000)
+            }
+        } catch (ex: WebDriverException) {
+            driver.quit()
+            System.exit(0)
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
         }
     }
 
