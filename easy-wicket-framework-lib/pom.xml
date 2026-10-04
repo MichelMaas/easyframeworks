@@ -9,6 +9,7 @@
         <version>2026.01-SNAPSHOT</version>
     </parent>
     <properties>
+        <jcef.version>146.0.10</jcef.version>
     </properties>
 
     <repositories>
@@ -102,6 +103,13 @@
             <artifactId>open</artifactId>
         </dependency>
 
+        <!--        Webclient-->
+        <!-- Embedded Chromium browser -->
+        <dependency>
+            <groupId>me.friwi</groupId>
+            <artifactId>jcefmaven</artifactId>
+            <version>${jcef.version}</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
