@@ -23,7 +23,32 @@ object CEFViewer : Viewer() {
 
     override fun startBrowser(url: String) {
         browser = client.createBrowser(url, true, false)
+        browserdebugger()
         createFrame()
+    }
+
+    private fun browserdebugger() {
+        var lastPaintWidth = -1
+        var lastPaintHeight = -1
+
+        browser!!.renderHandler?.addOnPaintListener { event ->
+            if (!event.popup &&
+                (event.width != lastPaintWidth || event.height != lastPaintHeight)
+            ) {
+                lastPaintWidth = event.width
+                lastPaintHeight = event.height
+
+                val dirty = event.dirtyRects.joinToString {
+                    "x=${it.x},y=${it.y},${it.width}x${it.height}"
+                }
+
+                println(
+                    "ONPAINT | " +
+                            "buffer=${event.width}x${event.height} | " +
+                            "dirty=[$dirty]"
+                )
+            }
+        }
     }
 
     private fun createFrame() {
