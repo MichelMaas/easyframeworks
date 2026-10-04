@@ -3,7 +3,9 @@ package nl.maas.wicket.framework.viewer
 import com.jogamp.opengl.awt.GLCanvas
 import me.friwi.jcefmaven.CefAppBuilder
 import org.cef.CefApp
+import org.cef.CefSettings
 import org.cef.browser.CefBrowser
+import org.cef.handler.CefDisplayHandlerAdapter
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.GraphicsEnvironment
@@ -22,9 +24,29 @@ object CEFViewer : Viewer() {
     private var frame: JFrame? = null
 
     override fun startBrowser(url: String) {
+        clientDebugger()
         browser = client.createBrowser(url, true, false)
         browserdebugger()
         createFrame()
+    }
+
+    private fun clientDebugger() {
+        client.addDisplayHandler(object : CefDisplayHandlerAdapter() {
+
+            override fun onConsoleMessage(
+                browser: CefBrowser,
+                level: CefSettings.LogSeverity,
+                message: String,
+                source: String,
+                line: Int
+            ): Boolean {
+                if (message.startsWith("VIEWPORT")) {
+                    println(message)
+                }
+
+                return false
+            }
+        })
     }
 
     private fun browserdebugger() {
@@ -119,6 +141,33 @@ object CEFViewer : Viewer() {
 
                 if (component is GLCanvas) {
                     component.display()
+                    currentBrowser.executeJavaScript(
+                        """
+    console.log("VIEWPORT " + JSON.stringify({
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+        dpr: window.devicePixelRatio,
+
+        scrollX: window.scrollX,
+        scrollY: window.scrollY,
+
+        clientWidth: document.documentElement.clientWidth,
+        clientHeight: document.documentElement.clientHeight,
+
+        bodyX: document.body.getBoundingClientRect().x,
+        bodyY: document.body.getBoundingClientRect().y,
+        bodyWidth: document.body.getBoundingClientRect().width,
+        bodyHeight: document.body.getBoundingClientRect().height,
+
+        visualWidth: window.visualViewport?.width,
+        visualHeight: window.visualViewport?.height,
+        visualOffsetX: window.visualViewport?.offsetLeft,
+        visualOffsetY: window.visualViewport?.offsetTop
+    }));
+    """.trimIndent(),
+                        currentBrowser.url,
+                        0
+                    )
                     val surfaceScale = FloatArray(2)
                     component.getCurrentSurfaceScale(surfaceScale)
 
