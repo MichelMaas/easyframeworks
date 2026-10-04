@@ -194,6 +194,16 @@ object CEFViewer : Viewer() {
                         }
 
                         override fun display(drawable: GLAutoDrawable) {
+                            val platformExtensions = drawable.gl.platformGLExtensions
+
+                            println(
+                                "JOGL BACKEND | " +
+                                        "drawable=${drawable.javaClass.name} | " +
+                                        "context=${drawable.context.javaClass.name} | " +
+                                        "gl=${drawable.gl.javaClass.name} | " +
+                                        "platformExtensions=${platformExtensions?.javaClass?.name}"
+                            )
+                            
                             val gl = drawable.gl.gL2
 
                             val viewport = IntArray(4)
