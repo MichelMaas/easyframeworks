@@ -5,6 +5,7 @@ import org.cef.CefApp
 import org.cef.browser.CefBrowser
 import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.GraphicsEnvironment
 import java.nio.file.Path
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
@@ -26,7 +27,15 @@ object CEFViewer : Viewer() {
             val frame = JFrame("Easy Wicket")
             frame.layout = BorderLayout()
             frame.add(browser!!.uiComponent, BorderLayout.CENTER)
-            frame.minimumSize = Dimension(800, 600)
+            val bounds = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .maximumWindowBounds
+            val width = (bounds.width * 0.8).toInt()
+            val height = (bounds.height * 0.8).toInt()
+            frame.minimumSize = Dimension(width, height)
+            frame.setSize(
+                width, height
+            )
             frame.setLocationRelativeTo(null)
             frame.defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
             frame.extendedState = JFrame.MAXIMIZED_BOTH
