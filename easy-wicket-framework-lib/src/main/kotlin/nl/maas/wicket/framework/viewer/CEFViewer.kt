@@ -102,12 +102,12 @@ object CEFViewer : Viewer() {
                 val component = browser!!.uiComponent
 
                 if (component is GLCanvas) {
-                    component.reshape(
-                        component.x,
-                        component.y,
-                        component.width,
-                        component.height
-                    )
+//                    component.reshape(
+//                        component.x,
+//                        component.y,
+//                        component.width,
+//                        component.height
+//                    )
 
                     component.display()
                 }
@@ -115,9 +115,10 @@ object CEFViewer : Viewer() {
                 val viewRect = browser!!.renderHandler?.getViewRect(browser)
 
                 println(
-                    "Frame: ${frame.contentPane.width}x${frame.contentPane.height} | " +
+                    "Frame: ${frame!!.contentPane.width}x${frame!!.contentPane.height} | " +
                             "CEF component: ${component.width}x${component.height} | " +
-                            "CEF viewRect: ${viewRect?.width}x${viewRect?.height}"
+                            "CEF viewRect: x=${viewRect?.x}, y=${viewRect?.y}, " +
+                            "${viewRect?.width}x${viewRect?.height}"
                 )
             }
         }
