@@ -122,6 +122,28 @@ object CEFViewer : Viewer() {
         return builder.build()
     }
 
+    private fun forceCefInvalidate(browser: CefBrowser) {
+        var type: Class<*>? = browser.javaClass
+
+        while (type != null) {
+            val method = type.declaredMethods.firstOrNull {
+                it.name == "invalidate" && it.parameterCount == 0
+            }
+
+            if (method != null) {
+                method.isAccessible = true
+                method.invoke(browser)
+
+                println("Forced CEF invalidate")
+                return
+            }
+
+            type = type.superclass
+        }
+
+        println("CEF invalidate method not found")
+    }
+
     val resizeAdapter = object : ComponentAdapter() {
 
         override fun componentResized(e: ComponentEvent) {
@@ -141,6 +163,7 @@ object CEFViewer : Viewer() {
 
                 if (component is GLCanvas) {
                     component.display()
+                    forceCefInvalidate(browser!!)
                     currentBrowser.executeJavaScript(
                         """
     console.log("VIEWPORT " + JSON.stringify({
