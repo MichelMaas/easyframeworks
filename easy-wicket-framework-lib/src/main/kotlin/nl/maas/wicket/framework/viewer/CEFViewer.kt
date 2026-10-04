@@ -1,5 +1,6 @@
 package nl.maas.wicket.framework.viewer
 
+import com.jogamp.opengl.awt.GLCanvas
 import me.friwi.jcefmaven.CefAppBuilder
 import org.cef.CefApp
 import org.cef.browser.CefBrowser
@@ -61,6 +62,7 @@ object CEFViewer : Viewer() {
                     }
                 }
             })
+            frame.addComponentListener(resizeAdapter)
             frame.setLocationRelativeTo(null)
             frame.defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
             frame.extendedState = JFrame.MAXIMIZED_BOTH
@@ -91,5 +93,33 @@ object CEFViewer : Viewer() {
                 .toString()
         builder.cefSettings.windowless_rendering_enabled = true
         return builder.build()
+    }
+
+    val resizeAdapter = object : ComponentAdapter() {
+
+        override fun componentResized(e: ComponentEvent) {
+            SwingUtilities.invokeLater {
+                val component = browser!!.uiComponent
+
+                if (component is GLCanvas) {
+                    component.reshape(
+                        component.x,
+                        component.y,
+                        component.width,
+                        component.height
+                    )
+
+                    component.display()
+                }
+
+                val viewRect = browser!!.renderHandler?.getViewRect(browser)
+
+                println(
+                    "Frame: ${frame.contentPane.width}x${frame.contentPane.height} | " +
+                            "CEF component: ${component.width}x${component.height} | " +
+                            "CEF viewRect: ${viewRect?.width}x${viewRect?.height}"
+                )
+            }
+        }
     }
 }
