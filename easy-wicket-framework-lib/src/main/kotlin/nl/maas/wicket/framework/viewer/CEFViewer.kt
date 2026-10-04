@@ -6,6 +6,8 @@ import org.cef.browser.CefBrowser
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.GraphicsEnvironment
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 import java.nio.file.Path
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
@@ -36,6 +38,29 @@ object CEFViewer : Viewer() {
             frame.setSize(
                 width, height
             )
+            val browserComponent = browser!!.uiComponent
+
+            frame.addComponentListener(object : ComponentAdapter() {
+                override fun componentResized(e: ComponentEvent) {
+                    println(
+                        "Frame: ${frame.contentPane.width}x${frame.contentPane.height} | " +
+                                "CEF: ${browserComponent.width}x${browserComponent.height}"
+                    )
+                }
+            })
+            frame.addComponentListener(object : ComponentAdapter() {
+                override fun componentResized(e: ComponentEvent) {
+                    SwingUtilities.invokeLater {
+                        val viewRect = browser!!.renderHandler?.getViewRect(browser)
+
+                        println(
+                            "Frame: ${frame.contentPane.width}x${frame.contentPane.height} | " +
+                                    "CEF component: ${browser!!.uiComponent.width}x${browser!!.uiComponent.height} | " +
+                                    "CEF viewRect: ${viewRect?.width}x${viewRect?.height}"
+                        )
+                    }
+                }
+            })
             frame.setLocationRelativeTo(null)
             frame.defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
             frame.extendedState = JFrame.MAXIMIZED_BOTH
