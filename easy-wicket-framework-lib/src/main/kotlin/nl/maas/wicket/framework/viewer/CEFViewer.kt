@@ -94,6 +94,15 @@ object CEFViewer : Viewer() {
 
                 if (component is GLCanvas) {
                     component.display()
+                    val surfaceScale = FloatArray(2)
+                    component.getCurrentSurfaceScale(surfaceScale)
+
+                    println(
+                        "GLCanvas | " +
+                                "component=${component.width}x${component.height} | " +
+                                "surface=${component.surfaceWidth}x${component.surfaceHeight} | " +
+                                "scale=${surfaceScale[0]}x${surfaceScale[1]}"
+                    )
                 }
 
                 val after = currentBrowser.renderHandler
