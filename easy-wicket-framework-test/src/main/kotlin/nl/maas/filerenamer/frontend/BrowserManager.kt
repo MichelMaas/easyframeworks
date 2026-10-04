@@ -1,7 +1,7 @@
 package nl.maas.filerenamer.frontend
 
 import jakarta.inject.Inject
-import nl.maas.wicket.framework.viewer.Viewer
+import nl.maas.wicket.framework.viewer.CEFViewer
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationListener
@@ -13,7 +13,7 @@ class BrowserManager private constructor() : ApplicationListener<ApplicationRead
 
     @Inject
     private lateinit var appContext: ApplicationContext
-    val viewer = Viewer.get()
+    val viewer = CEFViewer
     private fun startBrowser() {
         viewer.startBrowser("http://localhost:8080")
     }

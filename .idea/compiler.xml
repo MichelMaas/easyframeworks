@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="easy-torrent-framework-lib" />
-        <module name="easy-wicket-framework-test" />
         <module name="easy-io-framework-lib" />
         <module name="easy-wicket-framework-lib" />
       </profile>
