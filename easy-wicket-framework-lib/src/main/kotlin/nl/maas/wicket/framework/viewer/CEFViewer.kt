@@ -7,6 +7,7 @@ import org.cef.browser.CefBrowser
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.GraphicsEnvironment
+import java.awt.Toolkit
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.nio.file.Path
@@ -41,27 +42,6 @@ object CEFViewer : Viewer() {
             )
             val browserComponent = browser!!.uiComponent
 
-            frame.addComponentListener(object : ComponentAdapter() {
-                override fun componentResized(e: ComponentEvent) {
-                    println(
-                        "Frame: ${frame.contentPane.width}x${frame.contentPane.height} | " +
-                                "CEF: ${browserComponent.width}x${browserComponent.height}"
-                    )
-                }
-            })
-            frame.addComponentListener(object : ComponentAdapter() {
-                override fun componentResized(e: ComponentEvent) {
-                    SwingUtilities.invokeLater {
-                        val viewRect = browser!!.renderHandler?.getViewRect(browser)
-
-                        println(
-                            "Frame: ${frame.contentPane.width}x${frame.contentPane.height} | " +
-                                    "CEF component: ${browser!!.uiComponent.width}x${browser!!.uiComponent.height} | " +
-                                    "CEF viewRect: ${viewRect?.width}x${viewRect?.height}"
-                        )
-                    }
-                }
-            })
             frame.addComponentListener(resizeAdapter)
             frame.setLocationRelativeTo(null)
             frame.defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
@@ -99,26 +79,48 @@ object CEFViewer : Viewer() {
 
         override fun componentResized(e: ComponentEvent) {
             SwingUtilities.invokeLater {
-                val component = browser!!.uiComponent
+                val currentBrowser = browser ?: return@invokeLater
+                val component = currentBrowser.uiComponent
+
+                val before = currentBrowser.renderHandler
+                    ?.getViewRect(currentBrowser)
+
+                println(
+                    "BEFORE display | " +
+                            "component=${component.width}x${component.height} | " +
+                            "viewRect=x=${before?.x}, y=${before?.y}, " +
+                            "${before?.width}x${before?.height}"
+                )
 
                 if (component is GLCanvas) {
-//                    component.reshape(
-//                        component.x,
-//                        component.y,
-//                        component.width,
-//                        component.height
-//                    )
-
                     component.display()
                 }
 
-                val viewRect = browser!!.renderHandler?.getViewRect(browser)
+                val after = currentBrowser.renderHandler
+                    ?.getViewRect(currentBrowser)
 
                 println(
-                    "Frame: ${frame!!.contentPane.width}x${frame!!.contentPane.height} | " +
-                            "CEF component: ${component.width}x${component.height} | " +
-                            "CEF viewRect: x=${viewRect?.x}, y=${viewRect?.y}, " +
-                            "${viewRect?.width}x${viewRect?.height}"
+                    "AFTER display  | " +
+                            "component=${component.width}x${component.height} | " +
+                            "viewRect=x=${after?.x}, y=${after?.y}, " +
+                            "${after?.width}x${after?.height}"
+                )
+
+                val frameLocation = frame!!.locationOnScreen
+                val contentLocation = frame!!.contentPane.locationOnScreen
+                val componentLocation = component.locationOnScreen
+
+                val gc = component.graphicsConfiguration
+                val bounds = gc.bounds
+                val insets = Toolkit.getDefaultToolkit().getScreenInsets(gc)
+
+                println(
+                    "POSITIONS | " +
+                            "frame=${frameLocation.x},${frameLocation.y} | " +
+                            "content=${contentLocation.x},${contentLocation.y} | " +
+                            "CEF=${componentLocation.x},${componentLocation.y} | " +
+                            "screen=${bounds.x},${bounds.y},${bounds.width}x${bounds.height} | " +
+                            "insets=${insets.top},${insets.left},${insets.bottom},${insets.right}"
                 )
             }
         }
