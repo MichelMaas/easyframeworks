@@ -81,7 +81,17 @@ object CEFViewer : Viewer() {
         SwingUtilities.invokeLater {
             val frame = JFrame("Easy Wicket")
             frame.layout = BorderLayout()
-            frame.add(browser!!.uiComponent, BorderLayout.CENTER)
+            val browserComponent = browser!!.uiComponent
+
+            if (browserComponent is GLCanvas) {
+                browserComponent.setShallUseOffscreenLayer(true)
+
+                println(
+                    "Requested JOGL offscreen layer: " +
+                            browserComponent.shallUseOffscreenLayer
+                )
+            }
+            frame.add(browserComponent, BorderLayout.CENTER)
             val bounds = GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
                 .maximumWindowBounds
@@ -91,13 +101,21 @@ object CEFViewer : Viewer() {
             frame.setSize(
                 width, height
             )
-            val browserComponent = browser!!.uiComponent
-
             frame.addComponentListener(resizeAdapter)
             frame.setLocationRelativeTo(null)
             frame.defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
             frame.extendedState = JFrame.MAXIMIZED_BOTH
             frame.isVisible = true
+
+            SwingUtilities.invokeLater {
+                if (browserComponent is GLCanvas) {
+                    println(
+                        "JOGL offscreen layer active: " +
+                                browserComponent.isOffscreenLayerSurfaceEnabled
+                    )
+                }
+            }
+
             this.frame = frame
         }
     }
