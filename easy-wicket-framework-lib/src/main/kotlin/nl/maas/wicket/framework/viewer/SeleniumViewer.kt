@@ -123,4 +123,7 @@ object SeleniumViewer : Viewer() {
     }
 
 
+    fun handleURLResolveError(ex: WebDriverException, driver: WebDriver) {
+        println(ex.message)
+    }
 }

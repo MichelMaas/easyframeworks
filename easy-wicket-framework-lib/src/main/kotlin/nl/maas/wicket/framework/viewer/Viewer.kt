@@ -1,8 +1,5 @@
 package nl.maas.wicket.framework.viewer
 
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebDriverException
-
 
 abstract class Viewer protected constructor() {
 
@@ -18,9 +15,6 @@ abstract class Viewer protected constructor() {
         // Implementaties kunnen dit ondersteunen.
     }
 
-    fun handleURLResolveError(ex: WebDriverException, driver: WebDriver) {
-        throw NotImplementedError()
-    }
 
     companion object {
 

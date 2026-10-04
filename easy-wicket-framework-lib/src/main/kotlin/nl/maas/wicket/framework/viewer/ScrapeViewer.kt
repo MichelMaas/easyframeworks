@@ -20,10 +20,8 @@ import java.time.Duration
 import java.util.*
 
 
-private const val DEFAULT_TIME_OUT: Long = 1
-
 object ScrapeViewer : Viewer() {
-
+    private const val DEFAULT_TIME_OUT: Long = 1
 
     private lateinit var driver: WebDriver
     private var windowHandle: String = ""
@@ -160,5 +158,8 @@ object ScrapeViewer : Viewer() {
         }
     }
 
+    fun handleURLResolveError(ex: WebDriverException, driver: WebDriver) {
+        println(ex.message)
+    }
 
 }
