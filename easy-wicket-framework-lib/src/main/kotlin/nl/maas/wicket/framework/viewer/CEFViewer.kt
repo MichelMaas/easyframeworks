@@ -1,5 +1,9 @@
 package nl.maas.wicket.framework.viewer
 
+import com.jogamp.opengl.GL
+import com.jogamp.opengl.GL2
+import com.jogamp.opengl.GLAutoDrawable
+import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.awt.GLCanvas
 import me.friwi.jcefmaven.CefAppBuilder
 import org.cef.CefApp
@@ -150,7 +154,80 @@ object CEFViewer : Viewer() {
             SwingUtilities.invokeLater {
                 val currentBrowser = browser ?: return@invokeLater
                 val component = currentBrowser.uiComponent
+                if (component is GLCanvas) {
 
+                    component.addGLEventListener(object : GLEventListener {
+
+                        private var lastState = ""
+
+                        override fun init(drawable: GLAutoDrawable) {
+                        }
+
+                        override fun dispose(drawable: GLAutoDrawable) {
+                        }
+
+                        override fun reshape(
+                            drawable: GLAutoDrawable,
+                            x: Int,
+                            y: Int,
+                            width: Int,
+                            height: Int
+                        ) {
+                        }
+
+                        override fun display(drawable: GLAutoDrawable) {
+                            val gl = drawable.gl.gL2
+
+                            val viewport = IntArray(4)
+                            gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0)
+
+                            val scissor = IntArray(4)
+                            gl.glGetIntegerv(GL.GL_SCISSOR_BOX, scissor, 0)
+
+                            val scissorEnabled = gl.glIsEnabled(GL.GL_SCISSOR_TEST)
+
+                            val texture = IntArray(1)
+                            gl.glGetIntegerv(GL2.GL_TEXTURE_BINDING_2D, texture, 0)
+
+                            val textureWidth = IntArray(1)
+                            val textureHeight = IntArray(1)
+
+                            if (texture[0] != 0) {
+                                gl.glGetTexLevelParameteriv(
+                                    GL.GL_TEXTURE_2D,
+                                    0,
+                                    GL2.GL_TEXTURE_WIDTH,
+                                    textureWidth,
+                                    0
+                                )
+
+                                gl.glGetTexLevelParameteriv(
+                                    GL.GL_TEXTURE_2D,
+                                    0,
+                                    GL2.GL_TEXTURE_HEIGHT,
+                                    textureHeight,
+                                    0
+                                )
+                            }
+
+                            val state =
+                                "GL STATE | " +
+                                        "drawable=${drawable.surfaceWidth}x${drawable.surfaceHeight} | " +
+                                        "viewport=${viewport[0]},${viewport[1]}," +
+                                        "${viewport[2]}x${viewport[3]} | " +
+                                        "scissorEnabled=$scissorEnabled | " +
+                                        "scissor=${scissor[0]},${scissor[1]}," +
+                                        "${scissor[2]}x${scissor[3]} | " +
+                                        "texture=${texture[0]} " +
+                                        "${textureWidth[0]}x${textureHeight[0]}"
+
+                            if (state != lastState) {
+                                println(state)
+                                lastState = state
+                            }
+                        }
+                    })
+                }
                 val before = currentBrowser.renderHandler
                     ?.getViewRect(currentBrowser)
 
