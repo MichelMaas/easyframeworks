@@ -2,10 +2,9 @@ package nl.maas.wicket.framework.viewer
 
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 
-abstract class ScrapeViewer : Viewer() {
+abstract class ScrapeViewer : Viewer(true) {
 
     private val DEFAULT_TIME_OUT: Long = 1
-
 
     abstract fun navigateTo(url: String): Boolean
 
