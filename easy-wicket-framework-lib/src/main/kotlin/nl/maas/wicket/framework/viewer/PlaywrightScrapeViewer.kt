@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
 import java.util.*
 
-object PlayWrightScrapeViewer : ScrapeViewer() {
+object PlaywrightScrapeViewer : ScrapeViewer() {
     var app = App.CHROME
     val os =
         if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("win")) "win" else System.getProperty(
