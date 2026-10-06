@@ -11,7 +11,7 @@ class SeleniumScrapeElement(private val webElement: WebElement) : ScrapeElement 
         return webElement.getDomAttribute(name)
     }
 
-    override fun findElementByClass(className: String): List<ScrapeElement> {
+    override fun findElementsByClass(className: String): List<ScrapeElement> {
         return webElement.findElements(By.className(className)).filterNotNull().map { SeleniumScrapeElement(it) }
     }
 

@@ -7,12 +7,12 @@ interface ScrapeElement {
         name: String
     ): String?
 
-    fun findElementByClass(
+    fun findElementsByClass(
         className: String
     ): List<ScrapeElement>
 
     fun findElementById(id: String): ScrapeElement?
-    
+
     fun findElementsByTagName(
         tagName: String
     ): List<ScrapeElement>
