@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement
 
 class SeleniumScrapeElement(private val webElement: WebElement) : ScrapeElement {
     override val text: String
-        get() = TODO("Not yet implemented")
+        get() = webElement.text
 
     override fun getAttribute(name: String): String? {
         return webElement.getDomAttribute(name)
