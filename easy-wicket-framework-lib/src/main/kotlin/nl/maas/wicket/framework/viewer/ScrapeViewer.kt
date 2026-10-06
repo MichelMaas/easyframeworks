@@ -33,7 +33,7 @@ object ScrapeViewer : Viewer() {
     val arch = if (System.getProperty("os.arch").lowercase(Locale.getDefault()).contains("64")) "64" else "32"
     val pathDelimiter = if (os.equals("win")) "\\" else "/"
 
-    override fun startBrowser(url: String) {
+    override fun startBrowser(url: String, appName: String) {
         startWebDriver(url)
     }
 
