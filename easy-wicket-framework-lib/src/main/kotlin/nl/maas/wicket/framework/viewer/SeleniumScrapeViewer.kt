@@ -4,10 +4,11 @@ import com.vaadin.open.App
 import com.vaadin.open.Open
 import com.vaadin.open.Options
 import io.github.bonigarcia.wdm.WebDriverManager
+import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
+import nl.maas.wicket.framework.domain.scrapers.SeleniumScrapeElement
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriverException
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.edge.EdgeDriver
@@ -45,39 +46,42 @@ object SeleniumScrapeViewer : ScrapeViewer() {
         }
     }
 
-    override fun findElementsByClass(className: String, timeOut: Long): List<WebElement> {
+    override fun findElementsByClass(className: String, timeOut: Long): List<ScrapeElement> {
         val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
         return try {
             wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.className(className))).filterNotNull()
+                .map { SeleniumScrapeElement(it) }
         } catch (e: Exception) {
-            listOf<WebElement>()
+            listOf<ScrapeElement>()
         }
     }
 
-    override fun findElementsByTagName(tagName: String, timeOut: Long): List<WebElement> {
+    override fun findElementsByTagName(tagName: String, timeOut: Long): List<ScrapeElement> {
         val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
         return try {
             wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName(tagName))).filterNotNull()
+                .map { SeleniumScrapeElement(it) }
         } catch (e: Exception) {
-            listOf<WebElement>()
+            listOf<ScrapeElement>()
         }
     }
 
-    override fun findElementById(id: String, timeOut: Long): WebElement? {
+    override fun findElementById(id: String, timeOut: Long): ScrapeElement? {
         val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
         return try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id)))
+            SeleniumScrapeElement(wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id))))
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun findElementsByCSSSelector(cssSelector: String, timeOut: Long): List<WebElement> {
+    override fun findElementsByCSSSelector(cssSelector: String, timeOut: Long): List<ScrapeElement> {
         val wait = WebDriverWait(driver, Duration.ofSeconds(timeOut))
         return try {
             wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(cssSelector))).filterNotNull()
+                .map { SeleniumScrapeElement(it) }
         } catch (e: Exception) {
-            listOf<WebElement>()
+            listOf<ScrapeElement>()
         }
     }
 

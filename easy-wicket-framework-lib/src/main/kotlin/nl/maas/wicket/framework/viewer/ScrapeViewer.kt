@@ -1,6 +1,6 @@
 package nl.maas.wicket.framework.viewer
 
-import org.openqa.selenium.WebElement
+import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 
 abstract class ScrapeViewer : Viewer() {
 
@@ -9,11 +9,11 @@ abstract class ScrapeViewer : Viewer() {
 
     abstract fun navigateTo(url: String): Boolean
 
-    abstract fun findElementsByClass(className: String, timeOut: Long = DEFAULT_TIME_OUT): List<WebElement>
+    abstract fun findElementsByClass(className: String, timeOut: Long = DEFAULT_TIME_OUT): List<ScrapeElement>
 
-    abstract fun findElementsByTagName(tagName: String, timeOut: Long = DEFAULT_TIME_OUT): List<WebElement>
+    abstract fun findElementsByTagName(tagName: String, timeOut: Long = DEFAULT_TIME_OUT): List<ScrapeElement>
 
-    abstract fun findElementById(id: String, timeOut: Long = DEFAULT_TIME_OUT): WebElement?
+    abstract fun findElementById(id: String, timeOut: Long = DEFAULT_TIME_OUT): ScrapeElement?
 
-    abstract fun findElementsByCSSSelector(cssSelector: String, timeOut: Long = DEFAULT_TIME_OUT): List<WebElement>
+    abstract fun findElementsByCSSSelector(cssSelector: String, timeOut: Long = DEFAULT_TIME_OUT): List<ScrapeElement>
 }
