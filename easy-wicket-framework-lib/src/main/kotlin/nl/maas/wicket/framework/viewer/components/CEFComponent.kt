@@ -5,20 +5,21 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefPaintEvent
 import java.awt.BorderLayout
 import java.awt.Cursor
-import java.awt.Frame
 import java.awt.Graphics
+import java.awt.Window
 import java.awt.event.*
 import java.awt.image.BufferedImage
 import java.beans.PropertyChangeListener
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.function.Consumer
-import javax.swing.JFrame
 import javax.swing.JPanel
+import javax.swing.JWindow
 import javax.swing.SwingUtilities
 
 class CEFComponent(
-    private val browser: CefBrowser
+    private val browser: CefBrowser,
+    private val owner: Window
 ) : JPanel() {
 
     @Volatile
@@ -26,7 +27,7 @@ class CEFComponent(
 
     private val browserComponent = browser.uiComponent
 
-    private var driverFrame: JFrame? = null
+    private var driverWindow: JWindow? = null
 
     private val cursorChangeListener =
         PropertyChangeListener { event ->
@@ -67,7 +68,8 @@ class CEFComponent(
                 override fun componentResized(
                     e: ComponentEvent
                 ) {
-                    resizeBrowser()
+//                    resizeBrowser()
+                    syncDriverWindowBounds()
                 }
             }
         )
@@ -75,7 +77,7 @@ class CEFComponent(
 
         installInputHandlers()
 
-        createDriverFrame()
+        createDriverWindow()
     }
 
     private fun setCursorHandling() {
@@ -89,43 +91,61 @@ class CEFComponent(
                 ?: Cursor.getDefaultCursor()
     }
 
-    private fun createDriverFrame() {
+    private fun createDriverWindow() {
         SwingUtilities.invokeLater {
+            driverWindow =
+                JWindow(owner).apply {
+                    setFocusableWindowState(false)
+                    setAutoRequestFocus(false)
 
-            driverFrame = JFrame().apply {
-                isUndecorated = true
-                setFocusableWindowState(false)
-                setAutoRequestFocus(false)
+                    layout = BorderLayout()
 
-                layout = BorderLayout()
+                    add(
+                        browserComponent,
+                        BorderLayout.CENTER
+                    )
 
-                add(
-                    browserComponent,
-                    BorderLayout.CENTER
-                )
+                    opacity = 0.0f
 
-                setSize(
-                    width.coerceAtLeast(1),
-                    height.coerceAtLeast(1)
-                )
+                    isVisible = true
+                }
 
-                defaultCloseOperation =
-                    JFrame.DO_NOTHING_ON_CLOSE
+            syncDriverWindowBounds()
+        }
+    }
 
-                opacity = 0.0f
+    private fun syncDriverWindowBounds() {
+        SwingUtilities.invokeLater {
+            val currentDriverWindow =
+                driverWindow
+                    ?: return@invokeLater
 
-                isVisible = true
-                toBack()
+            if (!isShowing) {
+                return@invokeLater
             }
 
-            resizeBrowser()
+            val location =
+                locationOnScreen
+
+            currentDriverWindow.setBounds(
+                location.x,
+                location.y,
+                width.coerceAtLeast(1),
+                height.coerceAtLeast(1)
+            )
+
+            currentDriverWindow.validate()
+
+            if (browserComponent is GLCanvas) {
+                browserComponent.display()
+            }
         }
     }
 
     private fun resizeBrowser() {
         SwingUtilities.invokeLater {
             val currentDriverFrame =
-                driverFrame
+                driverWindow
                     ?: return@invokeLater
 
             val width =
@@ -347,17 +367,6 @@ class CEFComponent(
         }
     }
 
-    fun setMinimized(minimized: Boolean) {
-        SwingUtilities.invokeLater {
-            driverFrame?.extendedState =
-                if (minimized) {
-                    Frame.ICONIFIED
-                } else {
-                    Frame.NORMAL
-                }
-        }
-    }
-
     fun dispose() {
         browser.renderHandler
             ?.removeOnPaintListener(paintListener)
@@ -368,8 +377,8 @@ class CEFComponent(
         )
 
         SwingUtilities.invokeLater {
-            driverFrame?.dispose()
-            driverFrame = null
+            driverWindow?.dispose()
+            driverWindow = null
         }
 
         image = null

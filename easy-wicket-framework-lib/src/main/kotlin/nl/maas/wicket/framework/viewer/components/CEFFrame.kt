@@ -4,7 +4,6 @@ import nl.maas.wicket.framework.viewer.component.CEFComponent
 import org.cef.browser.CefBrowser
 import java.awt.BorderLayout
 import java.awt.Dimension
-import java.awt.Frame
 import java.awt.GraphicsEnvironment
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -16,10 +15,11 @@ class CEFFrame(
     private val onCloseRequest: () -> Unit
 ) : JFrame(title) {
 
-    private val cefComponent =
-        CEFComponent(browser)
+    private val cefComponent: CEFComponent
 
     init {
+
+        cefComponent = CEFComponent(browser, this)
         layout = BorderLayout()
 
         add(
@@ -63,13 +63,6 @@ class CEFFrame(
                 }
             }
         )
-
-        addWindowStateListener { event ->
-            val minimized =
-                event.newState and Frame.ICONIFIED != 0
-
-            cefComponent.setMinimized(minimized)
-        }
 
         extendedState =
             MAXIMIZED_BOTH
