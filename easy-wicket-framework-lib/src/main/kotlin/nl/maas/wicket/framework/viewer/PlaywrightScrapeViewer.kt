@@ -1,19 +1,9 @@
 package nl.maas.wicket.framework.viewer
 
-import com.vaadin.open.App
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebDriverException
-import org.openqa.selenium.WebElement
-import java.util.*
+import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 
 object PlaywrightScrapeViewer : ScrapeViewer() {
-    var app = App.CHROME
-    val os =
-        if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("win")) "win" else System.getProperty(
-            "os.name"
-        ).lowercase(Locale.getDefault())
-    val arch = if (System.getProperty("os.arch").lowercase(Locale.getDefault()).contains("64")) "64" else "32"
-    val pathDelimiter = if (os.equals("win")) "\\" else "/"
+
     override fun startBrowser(url: String, appName: String) {
     }
 
@@ -21,27 +11,23 @@ object PlaywrightScrapeViewer : ScrapeViewer() {
         return false
     }
 
-    override fun findElementsByClass(className: String, timeOut: Long): List<WebElement> {
+    override fun findElementsByClass(className: String, timeOut: Long): List<ScrapeElement> {
         return emptyList()
     }
 
-    override fun findElementsByTagName(tagName: String, timeOut: Long): List<WebElement> {
+    override fun findElementsByTagName(tagName: String, timeOut: Long): List<ScrapeElement> {
         return emptyList()
     }
 
-    override fun findElementById(id: String, timeOut: Long): WebElement? {
+    override fun findElementById(id: String, timeOut: Long): ScrapeElement? {
         return null
     }
 
-    override fun findElementsByCSSSelector(cssSelector: String, timeOut: Long): List<WebElement> {
+    override fun findElementsByCSSSelector(cssSelector: String, timeOut: Long): List<ScrapeElement> {
         return emptyList()
     }
 
     override fun close() {
-    }
-
-    fun handleURLResolveError(ex: WebDriverException, driver: WebDriver) {
-        println(ex.message)
     }
 
 }
