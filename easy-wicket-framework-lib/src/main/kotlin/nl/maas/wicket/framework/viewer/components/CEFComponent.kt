@@ -17,7 +17,7 @@ import javax.swing.JPanel
 import javax.swing.JWindow
 import javax.swing.SwingUtilities
 
-class CEFComponent(
+internal class CEFComponent(
     private val browser: CefBrowser,
     private val owner: Window
 ) : JPanel() {

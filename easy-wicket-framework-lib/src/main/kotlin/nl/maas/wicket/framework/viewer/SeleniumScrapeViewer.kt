@@ -21,8 +21,7 @@ import java.time.Duration
 import java.util.*
 
 
-object SeleniumScrapeViewer : ScrapeViewer() {
-    private const val DEFAULT_TIME_OUT: Long = 1
+internal class SeleniumScrapeViewer : ScrapeViewer() {
 
     private lateinit var driver: WebDriver
     private var windowHandle: String = ""

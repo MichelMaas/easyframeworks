@@ -15,7 +15,7 @@ import org.openqa.selenium.firefox.FirefoxOptions
 import java.util.*
 
 
-object SeleniumViewer : Viewer() {
+internal class SeleniumViewer : Viewer() {
 
 
     lateinit var driver: WebDriver

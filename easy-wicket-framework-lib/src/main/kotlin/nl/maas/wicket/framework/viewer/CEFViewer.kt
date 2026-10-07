@@ -7,7 +7,7 @@ import org.cef.browser.CefBrowser
 import java.nio.file.Path
 import javax.swing.SwingUtilities
 
-object CEFViewer : Viewer() {
+internal class CEFViewer : Viewer() {
 
     private val app = createApp()
     private val client = app.createClient()

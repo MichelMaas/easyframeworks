@@ -2,11 +2,7 @@ package nl.maas.wicket.framework.viewer
 
 object Viewers {
 
-    fun getScrapeViewer(): ScrapeViewer {
-        return PlaywrightScrapeViewer
-    }
+    val scraper: ScrapeViewer get() = PlaywrightScrapeViewer()
+    val viewer: Viewer get() = CEFViewer()
 
-    fun getViewer(): Viewer {
-        return CEFViewer
-    }
 }

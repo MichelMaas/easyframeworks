@@ -9,7 +9,7 @@ import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JFrame
 
-class CEFFrame(
+internal class CEFFrame(
     browser: CefBrowser,
     title: String = "Easy Wicket",
     private val onCloseRequest: () -> Unit

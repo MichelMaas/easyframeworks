@@ -5,7 +5,7 @@ import com.microsoft.playwright.options.WaitForSelectorState
 import nl.maas.wicket.framework.domain.scrapers.PlaywrightScrapeElement
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 
-object PlaywrightScrapeViewer : ScrapeViewer() {
+internal class PlaywrightScrapeViewer : ScrapeViewer() {
 
     private var playwright: Playwright? = null
     private var browser: Browser? = null
@@ -42,7 +42,7 @@ object PlaywrightScrapeViewer : ScrapeViewer() {
     }
 
     override fun findElementsByTagName(tagName: String, timeOut: Long): List<ScrapeElement> {
-        val locator = page!!.locator("$tagName")
+        val locator = page!!.locator(tagName)
         return try {
             locator.first()
                 .waitFor(Locator.WaitForOptions().setState(WaitForSelectorState.ATTACHED).setTimeout(timeOut * 1000.0))
@@ -64,7 +64,14 @@ object PlaywrightScrapeViewer : ScrapeViewer() {
     }
 
     override fun findElementsByCSSSelector(cssSelector: String, timeOut: Long): List<ScrapeElement> {
-        return emptyList()
+        val locator = page!!.locator(cssSelector)
+        return try {
+            locator.first()
+                .waitFor(Locator.WaitForOptions().setState(WaitForSelectorState.ATTACHED).setTimeout(timeOut * 1000.0))
+            locator.all().map { PlaywrightScrapeElement(it) }
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     override fun close() {
