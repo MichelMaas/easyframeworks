@@ -7,7 +7,7 @@ import org.cef.browser.CefBrowser
 import java.nio.file.Path
 import javax.swing.SwingUtilities
 
-internal class CEFViewer : Viewer() {
+internal class CEFViewer() : Viewer() {
 
     private val app = createApp()
     private val client = app.createClient()
@@ -17,7 +17,7 @@ internal class CEFViewer : Viewer() {
     override fun startBrowser(url: String, appName: String) {
         browser = client.createBrowser(url, true, false)
         SwingUtilities.invokeLater {
-            frame = CEFFrame(browser!!, appName, onCloseRequest = {
+            frame = CEFFrame(browser!!, appName, icon, onCloseRequest = {
                 fireCloseRequest()
             }).also { it.open() }
         }

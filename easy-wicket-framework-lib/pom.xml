@@ -18,10 +18,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>Equo-Chromium</id>
-            <url>https://dl.equo.dev/chromium-swt-ce/oss/mvn</url>
-        </repository>
+        <!--        <repository>-->
+        <!--            <id>Equo-Chromium</id>-->
+        <!--            <url>https://dl.equo.dev/chromium-swt-ce/oss/mvn</url>-->
+        <!--        </repository>-->
     </repositories>
 
     <dependencies>
@@ -106,6 +106,12 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>open</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>5.19.1</version>
         </dependency>
 
         <!--        Webclient-->

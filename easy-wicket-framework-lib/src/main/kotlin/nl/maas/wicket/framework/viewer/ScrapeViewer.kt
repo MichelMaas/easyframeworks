@@ -2,7 +2,7 @@ package nl.maas.wicket.framework.viewer
 
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 
-abstract class ScrapeViewer : Viewer(true) {
+abstract class ScrapeViewer() : Viewer(headless = true, icon = "") {
 
     private val DEFAULT_TIME_OUT: Long = 1
 

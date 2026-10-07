@@ -1,6 +1,10 @@
-package nl.maas.wicket.framework.viewer.component
+package nl.maas.wicket.framework.viewer.components
 
 import com.jogamp.opengl.awt.GLCanvas
+import com.sun.jna.Library
+import com.sun.jna.Native
+import com.sun.jna.Pointer
+import com.sun.jna.platform.unix.X11
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefPaintEvent
 import java.awt.BorderLayout
@@ -80,6 +84,35 @@ internal class CEFComponent(
         createDriverWindow()
     }
 
+    private fun makeMouseTransparent(
+        window: Window
+    ) {
+        val display =
+            X11.INSTANCE.XOpenDisplay(null)
+                ?: error("Could not open X11 display")
+
+        try {
+            val windowId =
+                Native.getWindowID(window)
+
+            XShape.INSTANCE.XShapeCombineRectangles(
+                display,
+                X11.Window(windowId),
+                XShape.SHAPE_INPUT,
+                0,
+                0,
+                Pointer.NULL,
+                0,
+                XShape.SHAPE_SET,
+                XShape.UNSORTED
+            )
+
+            X11.INSTANCE.XFlush(display)
+        } finally {
+            X11.INSTANCE.XCloseDisplay(display)
+        }
+    }
+
     private fun setCursorHandling() {
         browserComponent.addPropertyChangeListener(
             "cursor",
@@ -108,7 +141,10 @@ internal class CEFComponent(
                     opacity = 0.0f
 
                     isVisible = true
+
+
                 }
+            makeMouseTransparent(driverWindow!!)
 
             syncDriverWindowBounds()
         }
@@ -175,6 +211,8 @@ internal class CEFComponent(
 
                 override fun mousePressed(e: MouseEvent) {
                     requestFocusInWindow()
+                    browser.setFocus(true)
+                    println("Browser focus set in mousePressed")
                     forwardMouseEvent(e)
                 }
 
@@ -188,10 +226,12 @@ internal class CEFComponent(
 
                 override fun mouseEntered(e: MouseEvent) {
                     forwardMouseEvent(e)
+                    syncCursor()
                 }
 
                 override fun mouseExited(e: MouseEvent) {
                     forwardMouseEvent(e)
+                    syncCursor()
                 }
             }
         )
@@ -201,13 +241,17 @@ internal class CEFComponent(
 
                 override fun mouseMoved(e: MouseEvent) {
                     forwardMouseEvent(e)
+                    syncCursor()
                 }
 
                 override fun mouseDragged(e: MouseEvent) {
                     forwardMouseEvent(e)
+                    syncCursor()
                 }
             }
         )
+
+
 
         addMouseWheelListener { event ->
             forwardMouseWheelEvent(event)
@@ -254,6 +298,14 @@ internal class CEFComponent(
 //        )
     }
 
+    private fun syncCursor() {
+        SwingUtilities.invokeLater {
+            cursor =
+                browserComponent.cursor
+                    ?: Cursor.getDefaultCursor()
+        }
+    }
+
     private fun forwardMouseEvent(
         event: MouseEvent
     ) {
@@ -275,6 +327,8 @@ internal class CEFComponent(
     private fun forwardMouseWheelEvent(
         event: MouseWheelEvent
     ) {
+
+        val scrollMultiplier = 40
         browserComponent.dispatchEvent(
             MouseWheelEvent(
                 browserComponent,
@@ -286,8 +340,8 @@ internal class CEFComponent(
                 event.clickCount,
                 event.isPopupTrigger,
                 event.scrollType,
-                event.scrollAmount,
-                event.wheelRotation
+                event.scrollAmount * scrollMultiplier,
+                -event.wheelRotation
             )
         )
     }
@@ -382,5 +436,29 @@ internal class CEFComponent(
         }
 
         image = null
+    }
+
+    private interface XShape : Library {
+
+        fun XShapeCombineRectangles(
+            display: X11.Display,
+            window: X11.Window,
+            destKind: Int,
+            xOffset: Int,
+            yOffset: Int,
+            rectangles: Pointer?,
+            rectangleCount: Int,
+            operation: Int,
+            ordering: Int
+        )
+
+        companion object {
+            val INSTANCE: XShape =
+                Native.load("Xext", XShape::class.java)
+
+            const val SHAPE_INPUT = 2
+            const val SHAPE_SET = 0
+            const val UNSORTED = 0
+        }
     }
 }

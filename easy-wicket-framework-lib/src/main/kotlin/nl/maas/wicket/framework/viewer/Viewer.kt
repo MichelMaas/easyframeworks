@@ -1,7 +1,10 @@
 package nl.maas.wicket.framework.viewer
 
 
-abstract class Viewer protected constructor(protected val headless: Boolean = false) {
+abstract class Viewer protected constructor(
+    protected val headless: Boolean = false,
+    var icon: String = "/icon.png"
+) {
 
     private var closeRequestHandler: (() -> Unit)? = null
 

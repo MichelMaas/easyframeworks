@@ -9,7 +9,7 @@ class TransmissionTorrent constructor() :
     var status: Int = 0
     var percentComplete: Double = 0.0
         set(value) {
-            percentComplete = value.times(100)
+            percentComplete = value.times(10000)
         }
     var rateDownload: Long = 0
     var rateUpload: Long = 0

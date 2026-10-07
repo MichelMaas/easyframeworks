@@ -1,31 +1,33 @@
 package nl.maas.wicket.framework.viewer.components
 
-import nl.maas.wicket.framework.viewer.component.CEFComponent
+import nl.maas.wicket.framework.tools.FileUtil
 import org.cef.browser.CefBrowser
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.GraphicsEnvironment
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import javax.imageio.ImageIO
 import javax.swing.JFrame
 
 internal class CEFFrame(
     browser: CefBrowser,
     title: String = "Easy Wicket",
+    image: String = "/icon.png",
     private val onCloseRequest: () -> Unit
 ) : JFrame(title) {
 
-    private val cefComponent: CEFComponent
+    private val cefComponent: CEFComponent = CEFComponent(browser, this)
 
     init {
-
-        cefComponent = CEFComponent(browser, this)
         layout = BorderLayout()
 
         add(
             cefComponent,
             BorderLayout.CENTER
         )
+
+        FileUtil.fileFromResourceOrPath(image)?.let { iconImage = ImageIO.read(it) }
 
         val bounds =
             GraphicsEnvironment

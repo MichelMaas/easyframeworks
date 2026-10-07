@@ -41,15 +41,20 @@ class TransmissionClient(val url: URI, val user: String, val pass: String, val p
     }
 
     private fun send(requestBody: TransmissionBody): TransmissionResponse {
-        val client = HttpClient.newBuilder().authenticator(
-            BaseAuthenticator(
-                user,
-                if (passEncoded) String(Base64.getDecoder().decode(pass)) else pass
-            )
-        ).build()
-        val request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(requestBody.toJSon())).uri(url)
-            .header("Content-Type", "application/json").header("X-Transmission-Session-Id", sessionID).build()
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        return TransmissionResponse(response.body())
+        try {
+            val client = HttpClient.newBuilder().authenticator(
+                BaseAuthenticator(
+                    user,
+                    if (passEncoded) String(Base64.getDecoder().decode(pass)) else pass
+                )
+            ).build()
+            val request =
+                HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(requestBody.toJSon())).uri(url)
+                    .header("Content-Type", "application/json").header("X-Transmission-Session-Id", sessionID).build()
+            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+            return TransmissionResponse(response.body())
+        } catch (e: Exception) {
+            return TransmissionResponse(e.localizedMessage)
+        }
     }
 }

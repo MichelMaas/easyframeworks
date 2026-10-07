@@ -5,7 +5,7 @@ import com.microsoft.playwright.options.WaitForSelectorState
 import nl.maas.wicket.framework.domain.scrapers.PlaywrightScrapeElement
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 
-internal class PlaywrightScrapeViewer : ScrapeViewer() {
+internal class PlaywrightScrapeViewer() : ScrapeViewer() {
 
     private var playwright: Playwright? = null
     private var browser: Browser? = null
