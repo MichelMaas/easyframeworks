@@ -2,7 +2,7 @@ package nl.maas.wicket.framework.domain.scrapers
 
 import com.microsoft.playwright.Locator
 
-class PlaywrightScrapeElement(private val locator: Locator) : ScrapeElement {
+internal class PlaywrightScrapeElement(private val locator: Locator) : ScrapeElement {
     override val text: String
         get() = locator.innerText()
 

@@ -11,6 +11,7 @@
     <properties>
         <jcef.version>146.0.10</jcef.version>
         <javafx.version>11</javafx.version>
+        <jna-platform.version>5.19.1</jna-platform.version>
     </properties>
 
     <repositories>
@@ -25,20 +26,23 @@
     </repositories>
 
     <dependencies>
+
+        <!--        Spring Boot-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.giffing.wicket.spring.boot.starter</groupId>
             <artifactId>wicket-spring-boot-starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
+
+        <!--        Wicket-->
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-annotation</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.wicketstuff/wicketstuff-progressbar -->
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-progressbar</artifactId>
@@ -47,30 +51,20 @@
             <groupId>de.martinspielmann.wicket</groupId>
             <artifactId>wicket-chartjs</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
             <version>${wicket.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-request</artifactId>
             <version>${wicket.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-util</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-        </dependency>
-
 
         <!--        Bootstrap-->
         <dependency>
@@ -83,36 +77,16 @@
             <artifactId>wicket-bootstrap-extensions</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.agilecoders.wicket</groupId>
-            <artifactId>wicket-bootstrap-less</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>de.agilecoders.wicket</groupId>-->
+        <!--            <artifactId>wicket-bootstrap-less</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-themes</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-kotlin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>open</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-            <version>5.19.1</version>
-        </dependency>
 
         <!--        Webclient-->
         <!-- Embedded Chromium browser -->
@@ -128,27 +102,31 @@
             <version>1.63.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
+        <!--        Misc-->
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-chrome-driver</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-firefox-driver -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-firefox-driver</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>${jna-platform.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
     </dependencies>
 
