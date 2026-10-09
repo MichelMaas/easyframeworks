@@ -28,7 +28,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer
 import org.apache.wicket.markup.html.basic.Label
 import org.apache.wicket.model.Model
 import org.apache.wicket.protocol.http.WebApplication
-import org.apache.wicket.resource.FileSystemResourceReference
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -97,6 +96,14 @@ abstract class RIAPage<T : ModelCache>(
 
     override fun renderHead(response: IHeaderResponse) {
         super.renderHead(response)
+        val application = org.apache.wicket.Application.get()
+
+        println(
+            "BOOTSTRAP RENDER: " +
+                    "app=${System.identityHashCode(application)}, " +
+                    "class=${application.javaClass.name}, " +
+                    "loader=${application.javaClass.classLoader}"
+        )
         CSSLoader.load(application as WebApplication, response, "/static/css/sidebar.css")
         CSSLoader.load(application as WebApplication, response, "/static/css/buttons.css")
         renderFavIcon(response)

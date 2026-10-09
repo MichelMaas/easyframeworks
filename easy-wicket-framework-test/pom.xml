@@ -17,11 +17,6 @@
         </repository>
     </repositories>
     <dependencies>
-        <!--        <dependency>-->
-        <!--            <groupId>nl.maas.wicket.framework</groupId>-->
-        <!--            <artifactId>easy-jpa-framework</artifactId>-->
-        <!--            <version>${project.version}</version>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>nl.maas.framework</groupId>
             <artifactId>easy-wicket-framework-lib</artifactId>
@@ -60,7 +55,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
@@ -93,11 +87,6 @@
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-extensions</artifactId>
         </dependency>
-
-        <!--        <dependency>-->
-        <!--            <groupId>de.agilecoders.wicket</groupId>-->
-        <!--            <artifactId>wicket-bootstrap-less</artifactId>-->
-        <!--        </dependency>-->
 
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
@@ -134,8 +123,6 @@
     </dependencies>
 
     <build>
-        <!--        <sourceDirectory>src/main/javasrc/main/kotlin</sourceDirectory>-->
-        <!--        <sourceDirectory>src/main/kotlin</sourceDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

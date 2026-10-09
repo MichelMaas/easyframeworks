@@ -19,7 +19,6 @@
         <module>easy-wicket-framework-test</module>
         <module>easy-io-framework-lib</module>
         <module>easy-torrent-framework-lib</module>
-        <!--        <module>easy-jpa-framework</module>-->
     </modules>
 
     <scm>
@@ -103,12 +102,6 @@
 
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-    </dependencies>
 
     <build>
         <pluginManagement>
