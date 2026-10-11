@@ -13,7 +13,7 @@ import kotlin.io.path.exists
 
 internal class CEFViewer() : Viewer() {
 
-    private var jcefDir = FileUtils.getPathFromCache("jcef", "easy-wicket-framework")
+    private lateinit var jcefDir: Path
 
     private val builder = CefAppBuilder()
     private val app = createApp()
@@ -21,9 +21,14 @@ internal class CEFViewer() : Viewer() {
     private var browser: CefBrowser? = null
     private var frame: CEFFrame? = null
 
+    init {
+        setBrowserLocation()
+    }
+
     override fun startBrowser(url: String, appName: String) {
-        jcefDir?.let {
-            RuntimeManager(appName).ensureAvailable(RuntimeRequirement.JCEF)
+        val runtimeManager = RuntimeManager(appName)
+        if (!runtimeManager.isAvailable(RuntimeRequirement.JCEF)) {
+            runtimeManager.ensureAvailable(RuntimeRequirement.JCEF)
         }
         browser = client.createBrowser(url, true, false)
         SwingUtilities.invokeLater {
@@ -45,19 +50,19 @@ internal class CEFViewer() : Viewer() {
     }
 
     override fun setBrowserLocation(location: String?) {
-        location?.let {
-            jcefDir = if (Path.of(it).exists()) {
+        jcefDir = location?.let {
+            if (Path.of(it).exists()) {
                 Path.of(it)
             } else {
                 val appDir = System.getProperty(it)
 
                 if (!appDir.isNullOrBlank()) {
-                    FileUtils.pathFromResourceOrPath(location)
+                    FileUtils.pathFromResourceOrPath(location)!!
                 } else {
-                    FileUtils.getPathFromCache("jcef", "easy-wicket-framework")
+                    null
                 }
             }
-        }
+        } ?: FileUtils.getPathFromCache("jcef", "easy-wicket-framework")!!
     }
 
 

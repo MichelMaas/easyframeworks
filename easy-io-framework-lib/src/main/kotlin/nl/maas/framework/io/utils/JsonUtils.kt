@@ -10,7 +10,7 @@ object JsonUtils {
         val jsonFile = FileUtils.pathFromResourceOrPath(path)
         return jsonFile?.let {
             Gson().fromJson(
-                BufferedReader(FileReader(it, Charsets.UTF_8)),
+                BufferedReader(FileReader(it.toAbsolutePath().toString(), Charsets.UTF_8)),
                 clazz
             ) as T
         }

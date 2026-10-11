@@ -2,6 +2,7 @@ package nl.maas.wicket.framework.viewer
 
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.WaitForSelectorState
+import nl.maas.framework.io.utils.FileUtils
 import nl.maas.wicket.framework.domain.scrapers.PlaywrightScrapeElement
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 import java.nio.file.Path
@@ -9,10 +10,15 @@ import kotlin.io.path.exists
 
 internal class PlaywrightScrapeViewer() : ScrapeViewer() {
 
+    private lateinit var options: Playwright.CreateOptions
     private var playwright: Playwright? = null
     private var browser: Browser? = null
     private var context: BrowserContext? = null
     private var page: Page? = null
+
+    init {
+        setBrowserLocation()
+    }
 
     override fun startBrowser(url: String, appName: String) {
         playwright = Playwright.create()
@@ -24,19 +30,17 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
 
     override fun setBrowserLocation(location: String?) {
 
-        location?.let {
-            val options = Playwright.CreateOptions()
-            val env = System.getenv().toMutableMap()
-            val path: String? = if (Path.of(it, "playwright").exists()) {
-                it
+        val path = location?.let {
+            if (Path.of(it, "playwright").exists()) {
+                Path.of(it)
             } else {
-                System.getProperty(it)
+                Path.of(System.getProperty(it))
             }
-            env["PLAYWRIGHT_BROWSERS_PATH"] =
-                path?.let { Path.of(path, "playwright").toString() }
-
-            playwright = Playwright.create(options)
-        }
+        } ?: FileUtils.getPathFromCache("playwright", "easy-wicket-framework")!!
+        options = Playwright.CreateOptions()
+        val env = System.getenv().toMutableMap()
+        env["PLAYWRIGHT_BROWSERS_PATH"] =
+            path.toAbsolutePath().toString()
 
     }
 
