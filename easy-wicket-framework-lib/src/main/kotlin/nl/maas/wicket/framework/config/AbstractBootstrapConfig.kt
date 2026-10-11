@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.config
+package nl.maas.wicket.framework.config
 
 import com.giffing.wicket.spring.boot.context.extensions.WicketApplicationInitConfiguration
 import de.agilecoders.wicket.core.Bootstrap

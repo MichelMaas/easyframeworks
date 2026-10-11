@@ -1,7 +1,7 @@
-package nl.maas.wicket.framework.viewer.components
+package nl.maas.wicket.framework.services
 
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
-import nl.maas.wicket.framework.services.RuntimeProgressHandler
+import nl.maas.wicket.framework.viewer.components.RuntimePreparationDialog
 import org.apache.commons.lang3.StringUtils
 import javax.swing.SwingUtilities
 
@@ -19,7 +19,7 @@ class SwingRuntimeProgressHandler(
         }
     }
 
-    override fun progress(requirement: RuntimeRequirement, percent: Int, message: String?) {
+    override fun progress(requirement: RuntimeRequirement, percent: Int?, message: String?) {
         SwingUtilities.invokeLater {
             dialog.setStatus(message ?: StringUtils.EMPTY)
 
@@ -44,10 +44,8 @@ class SwingRuntimeProgressHandler(
         requirement: RuntimeRequirement,
         throwable: Throwable
     ) {
-        SwingUtilities.invokeLater {
-            dialog.setStatus(
-                "Installatie mislukt: ${throwable.message}"
-            )
-        }
+        dialog.setStatus(
+            "Installatie mislukt: ${throwable.message}"
+        )
     }
 }

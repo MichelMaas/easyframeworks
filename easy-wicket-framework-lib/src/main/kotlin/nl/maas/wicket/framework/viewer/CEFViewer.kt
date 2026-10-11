@@ -3,9 +3,12 @@ package nl.maas.wicket.framework.viewer
 import me.friwi.jcefmaven.CefAppBuilder
 import nl.maas.framework.io.utils.FileUtils
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
+import nl.maas.wicket.framework.tools.JcefRuntimeInstaller
 import nl.maas.wicket.framework.tools.RuntimeManager
 import nl.maas.wicket.framework.viewer.components.CEFFrame
+import nl.maas.wicket.framework.viewer.components.SwingRuntimePreparationUi
 import org.cef.CefApp
+import org.cef.CefClient
 import org.cef.browser.CefBrowser
 import java.nio.file.Path
 import javax.swing.SwingUtilities
@@ -15,20 +18,25 @@ internal class CEFViewer() : Viewer() {
 
     private lateinit var jcefDir: Path
 
-    private val builder = CefAppBuilder()
-    private val app = createApp()
-    private val client = app.createClient()
+    private val builder: CefAppBuilder
+    private val app: CefApp
+    private val client: CefClient
     private var browser: CefBrowser? = null
     private var frame: CEFFrame? = null
 
     init {
         setBrowserLocation()
+        builder = CefAppBuilder()
+        app = createApp()
+        client = app.createClient()
     }
 
     override fun startBrowser(url: String, appName: String) {
         val runtimeManager = RuntimeManager(appName)
         if (!runtimeManager.isAvailable(RuntimeRequirement.JCEF)) {
-            runtimeManager.ensureAvailable(RuntimeRequirement.JCEF)
+            JcefRuntimeInstaller(jcefDir)
+            runtimeManager.ensureAvailable(RuntimeRequirement.JCEF, SwingRuntimePreparationUi(appName))
+            jcefDir = runtimeManager.pathFor(RuntimeRequirement.JCEF)
         }
         browser = client.createBrowser(url, true, false)
         SwingUtilities.invokeLater {
@@ -57,7 +65,7 @@ internal class CEFViewer() : Viewer() {
                 val appDir = System.getProperty(it)
 
                 if (!appDir.isNullOrBlank()) {
-                    FileUtils.pathFromResourceOrPath(location)!!
+                    FileUtils.pathFromResourceOrPath(it)!!
                 } else {
                     null
                 }

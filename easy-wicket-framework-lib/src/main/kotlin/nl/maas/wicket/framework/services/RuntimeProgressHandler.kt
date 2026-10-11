@@ -10,7 +10,7 @@ interface RuntimeProgressHandler {
 
     fun progress(
         requirement: RuntimeRequirement,
-        percent: Int,
+        percent: Int?,
         message: String? = null
     )
 

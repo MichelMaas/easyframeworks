@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.config
+package nl.maas.wicket.framework.config
 
 import de.agilecoders.wicket.core.settings.BootstrapSettings
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme

@@ -10,10 +10,6 @@ import java.nio.file.Path
 class JcefRuntimeInstaller(override val installDir: Path) : RuntimeInstaller {
 
     override fun isInstalled(): Boolean {
-        if (!Files.isDirectory(installDir)) {
-            return false
-        }
-
         return Files.list(installDir).use {
             it.findAny().isPresent
         }

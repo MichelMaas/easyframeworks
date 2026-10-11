@@ -37,7 +37,7 @@ class JcefProgressHandler(
             percent
                 .takeIf { it >= 0 }
                 ?.toInt()
-                ?.coerceIn(0, 100) ?: 0,
+                ?.coerceIn(0, 100),
             message
         )
     }
