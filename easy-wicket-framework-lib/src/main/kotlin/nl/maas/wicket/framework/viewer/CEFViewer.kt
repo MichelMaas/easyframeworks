@@ -12,35 +12,34 @@ import org.cef.CefClient
 import org.cef.browser.CefBrowser
 import java.nio.file.Path
 import javax.swing.SwingUtilities
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 
 internal class CEFViewer() : Viewer() {
 
     private lateinit var jcefDir: Path
 
-    private val builder: CefAppBuilder
-    private val app: CefApp
-    private val client: CefClient
-    private var browser: CefBrowser? = null
-    private var frame: CEFFrame? = null
+    private lateinit var builder: CefAppBuilder
+    private lateinit var app: CefApp
+    private lateinit var client: CefClient
+    private lateinit var browser: CefBrowser
+    private lateinit var frame: CEFFrame
 
-    init {
-        setBrowserLocation()
-        builder = CefAppBuilder()
-        app = createApp()
-        client = app.createClient()
-    }
 
     override fun startBrowser(url: String, appName: String) {
         val runtimeManager = RuntimeManager(appName)
+        setBrowserLocation(runtimeManager.pathFor(RuntimeRequirement.JCEF).absolutePathString())
+
         if (!runtimeManager.isAvailable(RuntimeRequirement.JCEF)) {
             JcefRuntimeInstaller(jcefDir)
             runtimeManager.ensureAvailable(RuntimeRequirement.JCEF, SwingRuntimePreparationUi(appName))
-            jcefDir = runtimeManager.pathFor(RuntimeRequirement.JCEF)
         }
+        builder = CefAppBuilder()
+        app = createApp()
+        client = app.createClient()
         browser = client.createBrowser(url, true, false)
         SwingUtilities.invokeLater {
-            frame = CEFFrame(browser!!, appName, icon, onCloseRequest = {
+            frame = CEFFrame(browser, appName, icon, onCloseRequest = {
                 fireCloseRequest()
             }).also { it.open() }
         }
@@ -49,12 +48,10 @@ internal class CEFViewer() : Viewer() {
 
     override fun close() {
         SwingUtilities.invokeLater {
-            frame?.dispose()
-            frame = null
+            frame.dispose()
         }
 
-        browser?.doClose()
-        browser = null
+        browser.doClose()
     }
 
     override fun setBrowserLocation(location: String?) {
