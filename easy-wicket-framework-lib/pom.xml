@@ -26,6 +26,10 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>nl.maas.framework</groupId>
+            <artifactId>easy-io-framework-lib</artifactId>
+        </dependency>
 
         <!--        Spring Boot-->
         <dependency>

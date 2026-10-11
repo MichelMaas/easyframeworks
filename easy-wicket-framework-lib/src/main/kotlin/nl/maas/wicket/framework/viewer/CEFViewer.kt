@@ -1,6 +1,9 @@
 package nl.maas.wicket.framework.viewer
 
 import me.friwi.jcefmaven.CefAppBuilder
+import nl.maas.framework.io.utils.FileUtils
+import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
+import nl.maas.wicket.framework.tools.RuntimeManager
 import nl.maas.wicket.framework.viewer.components.CEFFrame
 import org.cef.CefApp
 import org.cef.browser.CefBrowser
@@ -10,12 +13,8 @@ import kotlin.io.path.exists
 
 internal class CEFViewer() : Viewer() {
 
-    private var jcefDir = Path.of(
-        System.getProperty("user.home"),
-        ".cache",
-        "easy-wicket-framework",
-        "jcef"
-    )
+    private var jcefDir = FileUtils.getPathFromCache("jcef", "easy-wicket-framework")
+
     private val builder = CefAppBuilder()
     private val app = createApp()
     private val client = app.createClient()
@@ -23,6 +22,9 @@ internal class CEFViewer() : Viewer() {
     private var frame: CEFFrame? = null
 
     override fun startBrowser(url: String, appName: String) {
+        jcefDir?.let {
+            RuntimeManager(appName).ensureAvailable(RuntimeRequirement.JCEF)
+        }
         browser = client.createBrowser(url, true, false)
         SwingUtilities.invokeLater {
             frame = CEFFrame(browser!!, appName, icon, onCloseRequest = {
@@ -47,17 +49,12 @@ internal class CEFViewer() : Viewer() {
             jcefDir = if (Path.of(it).exists()) {
                 Path.of(it)
             } else {
-                val appDir = System.getProperty("filerenamer.appdir")
+                val appDir = System.getProperty(it)
 
                 if (!appDir.isNullOrBlank()) {
-                    Path.of(appDir, "jcef")
+                    FileUtils.pathFromResourceOrPath(location)
                 } else {
-                    Path.of(
-                        System.getProperty("user.home"),
-                        ".cache",
-                        "easy-wicket-framework",
-                        "jcef"
-                    )
+                    FileUtils.getPathFromCache("jcef", "easy-wicket-framework")
                 }
             }
         }
