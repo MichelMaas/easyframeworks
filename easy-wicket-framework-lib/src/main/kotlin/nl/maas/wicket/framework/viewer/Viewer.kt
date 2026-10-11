@@ -20,6 +20,8 @@ abstract class Viewer protected constructor(
         url: String = "http://localhost:8080", appName: String = "App"
     )
 
+    abstract fun setBrowserLocation(location: String? = null)
+
     abstract fun close()
 
     open fun reload() {

@@ -6,9 +6,17 @@ import org.cef.CefApp
 import org.cef.browser.CefBrowser
 import java.nio.file.Path
 import javax.swing.SwingUtilities
+import kotlin.io.path.exists
 
 internal class CEFViewer() : Viewer() {
 
+    private var jcefDir = Path.of(
+        System.getProperty("user.home"),
+        ".cache",
+        "easy-wicket-framework",
+        "jcef"
+    )
+    private val builder = CefAppBuilder()
     private val app = createApp()
     private val client = app.createClient()
     private var browser: CefBrowser? = null
@@ -34,20 +42,32 @@ internal class CEFViewer() : Viewer() {
         browser = null
     }
 
+    override fun setBrowserLocation(location: String?) {
+        location?.let {
+            jcefDir = if (Path.of(it).exists()) {
+                Path.of(it)
+            } else {
+                val appDir = System.getProperty("filerenamer.appdir")
+
+                if (!appDir.isNullOrBlank()) {
+                    Path.of(appDir, "jcef")
+                } else {
+                    Path.of(
+                        System.getProperty("user.home"),
+                        ".cache",
+                        "easy-wicket-framework",
+                        "jcef"
+                    )
+                }
+            }
+        }
+    }
+
 
     private fun createApp(): CefApp {
-        val builder = CefAppBuilder()
-        val cefPath = Path.of(
-            System.getProperty("user.home"),
-            ".cache",
-            "easy-wicket-framework",
-            "jcef"
-        )
-        builder.setInstallDir(
-            cefPath.toFile()
-        )
+        builder.setInstallDir(jcefDir.toFile())
         builder.cefSettings.root_cache_path =
-            cefPath.resolve("cache")
+            jcefDir.resolve("cache")
                 .toAbsolutePath()
                 .toString()
         builder.cefSettings.windowless_rendering_enabled = true

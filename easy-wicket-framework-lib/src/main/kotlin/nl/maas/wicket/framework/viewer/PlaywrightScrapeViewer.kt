@@ -4,6 +4,8 @@ import com.microsoft.playwright.*
 import com.microsoft.playwright.options.WaitForSelectorState
 import nl.maas.wicket.framework.domain.scrapers.PlaywrightScrapeElement
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
+import java.nio.file.Path
+import kotlin.io.path.exists
 
 internal class PlaywrightScrapeViewer() : ScrapeViewer() {
 
@@ -18,6 +20,24 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
         context = browser!!.newContext()
         page = context!!.newPage()
         page!!.navigate(url)
+    }
+
+    override fun setBrowserLocation(location: String?) {
+
+        location?.let {
+            val options = Playwright.CreateOptions()
+            val env = System.getenv().toMutableMap()
+            val path: String? = if (Path.of(it, "playwright").exists()) {
+                it
+            } else {
+                System.getProperty(it)
+            }
+            env["PLAYWRIGHT_BROWSERS_PATH"] =
+                path?.let { Path.of(path, "playwright").toString() }
+
+            playwright = Playwright.create(options)
+        }
+
     }
 
     override fun navigateTo(url: String): Boolean {
