@@ -7,6 +7,7 @@ import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
 import nl.maas.wicket.framework.tools.PlaywrightRuntimeInstaller
 import nl.maas.wicket.framework.tools.RuntimeManager
+import nl.maas.wicket.framework.viewer.components.SwingRuntimePreparationUi
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 
@@ -31,7 +32,7 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
         if (!runtimeManager.isAvailable(RuntimeRequirement.PLAYWRIGHT)) {
             options.env?.get(PLAYWRIGHT_BROWSERS_PATH)?.let {
                 PlaywrightRuntimeInstaller(Path.of(it))
-                runtimeManager.ensureAvailable(RuntimeRequirement.PLAYWRIGHT)
+                runtimeManager.ensureAvailable(RuntimeRequirement.PLAYWRIGHT, SwingRuntimePreparationUi(appName))
             }
         }
 
