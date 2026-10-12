@@ -13,6 +13,7 @@ import kotlin.io.path.absolutePathString
 
 internal class PlaywrightScrapeViewer() : ScrapeViewer() {
     private val PLAYWRIGHT_BROWSERS_PATH = "PLAYWRIGHT_BROWSERS_PATH"
+    private val PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD"
     private val options = Playwright.CreateOptions()
     private var playwright: Playwright? = null
     private var browser: Browser? = null
@@ -50,6 +51,8 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
 
             env[PLAYWRIGHT_BROWSERS_PATH] =
                 it.absolutePathString()
+            env[PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD] =
+                "1"
             options.setEnv(env)
         }
 
