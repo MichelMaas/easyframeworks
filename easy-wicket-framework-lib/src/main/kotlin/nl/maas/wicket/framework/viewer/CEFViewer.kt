@@ -11,8 +11,6 @@ import org.cef.CefClient
 import org.cef.browser.CefBrowser
 import java.nio.file.Path
 import javax.swing.SwingUtilities
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.exists
 
 internal class CEFViewer() : Viewer() {
 
@@ -27,7 +25,7 @@ internal class CEFViewer() : Viewer() {
 
     override fun startBrowser(url: String, appName: String) {
         val runtimeManager = RuntimeManager(appName)
-        setBrowserLocation(runtimeManager.pathFor(RuntimeRequirement.JCEF).absolutePathString())
+        setBrowserLocation(runtimeManager.pathFor(RuntimeRequirement.JCEF))
 
         if (!runtimeManager.isAvailable(RuntimeRequirement.JCEF)) {
             runtimeManager.ensureAvailable(RuntimeRequirement.JCEF, SwingRuntimePreparationUi(appName))
@@ -52,20 +50,8 @@ internal class CEFViewer() : Viewer() {
         browser.doClose()
     }
 
-    override fun setBrowserLocation(location: String?) {
-        jcefDir = location?.let {
-            if (Path.of(it).exists()) {
-                Path.of(it)
-            } else {
-                val appDir = System.getProperty(it)
-
-                if (!appDir.isNullOrBlank()) {
-                    FileUtils.pathFromResourceOrPath(it)!!
-                } else {
-                    null
-                }
-            }
-        } ?: FileUtils.getPathFromCache("jcef", "easy-wicket-framework")!!
+    override fun setBrowserLocation(location: Path?) {
+        jcefDir = location ?: FileUtils.getPathFromCache("jcef", "easy-wicket-framework")!!
     }
 
 

@@ -1,5 +1,7 @@
 package nl.maas.wicket.framework.viewer
 
+import java.nio.file.Path
+
 
 abstract class Viewer protected constructor(
     protected val headless: Boolean = false,
@@ -20,7 +22,7 @@ abstract class Viewer protected constructor(
         url: String = "http://localhost:8080", appName: String = "App"
     )
 
-    abstract fun setBrowserLocation(location: String? = null)
+    abstract fun setBrowserLocation(location: Path? = null)
 
     abstract fun close()
 

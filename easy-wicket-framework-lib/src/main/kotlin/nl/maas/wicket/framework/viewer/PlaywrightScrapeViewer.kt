@@ -2,7 +2,6 @@ package nl.maas.wicket.framework.viewer
 
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.WaitForSelectorState
-import nl.maas.framework.io.utils.FileUtils
 import nl.maas.wicket.framework.domain.scrapers.PlaywrightScrapeElement
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
@@ -10,20 +9,15 @@ import nl.maas.wicket.framework.tools.PlaywrightRuntimeInstaller
 import nl.maas.wicket.framework.tools.RuntimeManager
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
-import kotlin.io.path.exists
 
 internal class PlaywrightScrapeViewer() : ScrapeViewer() {
     private val PLAYWRIGHT_BROWSERS_PATH = "PLAYWRIGHT_BROWSERS_PATH"
-    private var playWrightPath: Path? = null
-    private lateinit var options: Playwright.CreateOptions
+    private val options = Playwright.CreateOptions()
     private var playwright: Playwright? = null
     private var browser: Browser? = null
     private var context: BrowserContext? = null
     private var page: Page? = null
 
-    init {
-        setBrowserLocation()
-    }
 
     override fun startBrowser(url: String, appName: String) {
         val runtimeManager = RuntimeManager(appName)
@@ -31,7 +25,7 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
             setBrowserLocation(
                 runtimeManager.pathFor(
                     RuntimeRequirement.PLAYWRIGHT
-                ).absolutePathString()
+                )
             )
         }
         if (!runtimeManager.isAvailable(RuntimeRequirement.PLAYWRIGHT)) {
@@ -48,18 +42,13 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
         page!!.navigate(url)
     }
 
-    override fun setBrowserLocation(location: String?) {
+    override fun setBrowserLocation(location: Path?) {
         location?.let {
-            val path = if (Path.of(it, "playwright").exists()) {
-                Path.of(it)
-            } else {
-                Path.of(System.getProperty(it))
-            }
-            options = Playwright.CreateOptions()
+
             val env = System.getenv().toMutableMap()
 
             env[PLAYWRIGHT_BROWSERS_PATH] =
-                path.absolutePathString()
+                it.absolutePathString()
             options.setEnv(env)
         }
 
