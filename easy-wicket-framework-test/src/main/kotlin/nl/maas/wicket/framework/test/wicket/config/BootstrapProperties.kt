@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.config
+package nl.maas.wicket.framework.test.wicket.config
 
 import nl.maas.wicket.framework.config.AbstractBootstrapProperties
 import org.springframework.boot.context.properties.ConfigurationProperties

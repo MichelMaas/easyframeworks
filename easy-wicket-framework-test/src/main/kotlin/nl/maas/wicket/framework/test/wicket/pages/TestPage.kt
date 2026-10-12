@@ -1,11 +1,7 @@
-package nl.maas.filerenamer.frontend.wicket.pages
+package nl.maas.wicket.framework.test.wicket.pages
 
 import com.giffing.wicket.spring.boot.context.scan.WicketHomePage
 import jakarta.inject.Inject
-import nl.maas.filerenamer.frontend.wicket.caches.ModelCache
-import nl.maas.filerenamer.frontend.wicket.objects.enums.Options
-import nl.maas.filerenamer.frontend.wicket.panels.Panel1
-import nl.maas.filerenamer.frontend.wicket.panels.Panel2
 import nl.maas.wicket.framework.components.base.CollapsablePanel
 import nl.maas.wicket.framework.components.base.CollapsablePanel.Companion.CONTENT_ID
 import nl.maas.wicket.framework.components.base.DynamicDataTable
@@ -24,6 +20,10 @@ import nl.maas.wicket.framework.objects.enums.NavbarOrientation
 import nl.maas.wicket.framework.objects.enums.NavbarType
 import nl.maas.wicket.framework.pages.RIAPage
 import nl.maas.wicket.framework.services.TranslatorPlaceHolder
+import nl.maas.wicket.framework.test.wicket.caches.ModelCache
+import nl.maas.wicket.framework.test.wicket.objects.enums.Options
+import nl.maas.wicket.framework.test.wicket.panels.Panel1
+import nl.maas.wicket.framework.test.wicket.panels.Panel2
 import org.apache.wicket.ajax.AjaxRequestTarget
 import org.apache.wicket.markup.html.WebMarkupContainer
 import org.apache.wicket.model.CompoundPropertyModel

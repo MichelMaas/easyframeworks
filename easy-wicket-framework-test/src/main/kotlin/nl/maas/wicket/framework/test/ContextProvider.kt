@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend
+package nl.maas.wicket.framework.test
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware

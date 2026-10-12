@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend
+package nl.maas.wicket.framework.test
 
 import jakarta.inject.Inject
 import nl.maas.wicket.framework.viewer.Viewers
@@ -15,7 +15,7 @@ class BrowserManager private constructor() : ApplicationListener<ApplicationRead
     private lateinit var appContext: ApplicationContext
     val viewer = Viewers.viewer
     private fun startBrowser() {
-        viewer.startBrowser("http://localhost:8080")
+        viewer.startBrowser("http://localhost:8080", "wicket-test")
     }
 
     fun close() {

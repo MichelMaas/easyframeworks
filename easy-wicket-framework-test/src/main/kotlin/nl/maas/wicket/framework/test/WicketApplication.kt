@@ -1,6 +1,6 @@
-package nl.maas.filerenamer.frontend
+package nl.maas.wicket.framework.test
 
-import nl.maas.filerenamer.frontend.wicket.pages.TestPage
+import nl.maas.wicket.framework.test.wicket.pages.TestPage
 import org.apache.wicket.Page
 import org.apache.wicket.protocol.http.WebApplication
 import org.apache.wicket.resource.FileSystemResourceReference
@@ -27,7 +27,12 @@ class WicketApplication : WebApplication() {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            SpringApplication.run(WicketApplication::class.java, *args)
+            val application =
+                SpringApplication(WicketApplication::class.java)
+
+            application.setHeadless(false)
+
+            application.run(*args)
         }
 
         fun restart() {

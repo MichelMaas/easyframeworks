@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.services
+package nl.maas.wicket.framework.test.services
 
 import java.io.File
 import java.nio.file.Files

@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.objects.enums
+package nl.maas.wicket.framework.test.wicket.objects.enums
 
 enum class Options {
     optie1,

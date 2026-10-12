@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.panels
+package nl.maas.wicket.framework.test.wicket.panels
 
 import nl.maas.wicket.framework.pages.BasePage
 import org.apache.wicket.markup.html.panel.Panel

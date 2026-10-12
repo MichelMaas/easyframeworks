@@ -3,7 +3,6 @@ package nl.maas.wicket.framework.viewer
 import me.friwi.jcefmaven.CefAppBuilder
 import nl.maas.framework.io.utils.FileUtils
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
-import nl.maas.wicket.framework.tools.JcefRuntimeInstaller
 import nl.maas.wicket.framework.tools.RuntimeManager
 import nl.maas.wicket.framework.viewer.components.CEFFrame
 import nl.maas.wicket.framework.viewer.components.SwingRuntimePreparationUi
@@ -31,7 +30,6 @@ internal class CEFViewer() : Viewer() {
         setBrowserLocation(runtimeManager.pathFor(RuntimeRequirement.JCEF).absolutePathString())
 
         if (!runtimeManager.isAvailable(RuntimeRequirement.JCEF)) {
-            JcefRuntimeInstaller(jcefDir)
             runtimeManager.ensureAvailable(RuntimeRequirement.JCEF, SwingRuntimePreparationUi(appName))
         }
         builder = CefAppBuilder()

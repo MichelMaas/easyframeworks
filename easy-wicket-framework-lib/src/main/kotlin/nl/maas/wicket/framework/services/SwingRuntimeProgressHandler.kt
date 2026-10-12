@@ -44,8 +44,8 @@ class SwingRuntimeProgressHandler(
         requirement: RuntimeRequirement,
         throwable: Throwable
     ) {
-        dialog.setStatus(
-            "Installatie mislukt: ${throwable.message}"
+        dialog.failed(
+            throwable.message ?: "Installatie mislukt"
         )
     }
 }

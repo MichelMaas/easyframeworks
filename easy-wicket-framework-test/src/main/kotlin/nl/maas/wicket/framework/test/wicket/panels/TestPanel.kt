@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.panels
+package nl.maas.wicket.framework.test.wicket.panels
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.UpdatableProgressBar
 import org.apache.wicket.ajax.AjaxRequestTarget

@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.caches
+package nl.maas.wicket.framework.test.wicket.caches
 
 import nl.maas.wicket.framework.components.charts.data.BarchartData
 import nl.maas.wicket.framework.components.charts.data.LineChartData

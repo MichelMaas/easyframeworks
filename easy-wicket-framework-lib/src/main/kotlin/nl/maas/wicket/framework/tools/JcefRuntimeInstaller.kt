@@ -6,11 +6,12 @@ import nl.maas.wicket.framework.services.JcefProgressHandler
 import nl.maas.wicket.framework.services.RuntimeProgressHandler
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.isDirectory
 
 class JcefRuntimeInstaller(override val installDir: Path) : RuntimeInstaller {
 
     override fun isInstalled(): Boolean {
-        return Files.list(installDir).use {
+        return installDir.isDirectory() && Files.list(installDir).use {
             it.findAny().isPresent
         }
     }

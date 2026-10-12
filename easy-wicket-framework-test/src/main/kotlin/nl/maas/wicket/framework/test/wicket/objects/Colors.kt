@@ -1,4 +1,4 @@
-package nl.maas.filerenamer.frontend.wicket.objects
+package nl.maas.wicket.framework.test.wicket.objects
 
 import de.martinspielmann.wicket.chartjs.data.dataset.property.color.SimpleColor
 import kotlin.reflect.full.memberProperties
