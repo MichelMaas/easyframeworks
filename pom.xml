@@ -23,15 +23,15 @@
 
     <scm>
         <connection>
-            scm:git:https://github.com/MichelMaas/parent.git
+            scm:git:https://github.com/MichelMaas/easyframeworks.git
         </connection>
 
         <developerConnection>
-            scm:git:ssh://git@github.com/MichelMaas/parent.git
+            scm:git:ssh://git@github.com/MichelMaas/easyframeworks.git
         </developerConnection>
 
         <url>
-            https://github.com/MichelMaas/parent
+            https://github.com/MichelMaas/easyframeworks
         </url>
 
         <tag>HEAD</tag>
