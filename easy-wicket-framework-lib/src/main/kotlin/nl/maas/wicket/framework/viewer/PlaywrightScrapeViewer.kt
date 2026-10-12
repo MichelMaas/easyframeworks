@@ -6,14 +6,15 @@ import nl.maas.framework.io.utils.FileUtils
 import nl.maas.wicket.framework.domain.scrapers.PlaywrightScrapeElement
 import nl.maas.wicket.framework.domain.scrapers.ScrapeElement
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
-import nl.maas.wicket.framework.tools.JcefRuntimeInstaller
 import nl.maas.wicket.framework.tools.PlaywrightRuntimeInstaller
 import nl.maas.wicket.framework.tools.RuntimeManager
 import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 
 internal class PlaywrightScrapeViewer() : ScrapeViewer() {
     private val PLAYWRIGHT_BROWSERS_PATH = "PLAYWRIGHT_BROWSERS_PATH"
+    private var playWrightPath: Path? = null
     private lateinit var options: Playwright.CreateOptions
     private var playwright: Playwright? = null
     private var browser: Browser? = null
@@ -26,10 +27,20 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
 
     override fun startBrowser(url: String, appName: String) {
         val runtimeManager = RuntimeManager(appName)
-        if (!runtimeManager.isAvailable(RuntimeRequirement.PLAYWRIGHT)) {
-            options.env?.get(PLAYWRIGHT_BROWSERS_PATH)?.let { PlaywrightRuntimeInstaller(Path.of(it))
-            runtimeManager.ensureAvailable(RuntimeRequirement.PLAYWRIGHT)}
+        options.env?.getValue(PLAYWRIGHT_BROWSERS_PATH) ?: run {
+            setBrowserLocation(
+                runtimeManager.pathFor(
+                    RuntimeRequirement.PLAYWRIGHT
+                ).absolutePathString()
+            )
         }
+        if (!runtimeManager.isAvailable(RuntimeRequirement.PLAYWRIGHT)) {
+            options.env?.get(PLAYWRIGHT_BROWSERS_PATH)?.let {
+                PlaywrightRuntimeInstaller(Path.of(it))
+                runtimeManager.ensureAvailable(RuntimeRequirement.PLAYWRIGHT)
+            }
+        }
+
         playwright = Playwright.create(options)
         browser = playwright!!.chromium().launch(BrowserType.LaunchOptions().setHeadless(headless))
         context = browser!!.newContext()
