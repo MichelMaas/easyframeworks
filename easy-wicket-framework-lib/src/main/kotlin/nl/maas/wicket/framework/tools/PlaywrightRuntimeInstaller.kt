@@ -2,10 +2,10 @@ package nl.maas.wicket.framework.tools
 
 import com.microsoft.playwright.Playwright
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
+import nl.maas.wicket.framework.services.PlaywrightProgressHandler
 import nl.maas.wicket.framework.services.RuntimeProgressHandler
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.concurrent.TimeUnit
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
 
@@ -36,8 +36,6 @@ class PlaywrightRuntimeInstaller(
             return false
         }
 
-        // Als we de Playwright-versie kunnen bepalen,
-        // moet de geïnstalleerde versie daarmee overeenkomen.
         currentVersion()?.let { currentVersion ->
             val installedVersion =
                 Files.readString(installMarker).trim()
@@ -47,16 +45,19 @@ class PlaywrightRuntimeInstaller(
             }
         }
 
-        // Marker én een echte Chromium-installatie moeten bestaan.
-        return Files.list(installDir).use { paths ->
+        return hasRuntime("chromium-") &&
+                hasRuntime("chromium_headless_shell-")
+    }
+
+    private fun hasRuntime(prefix: String): Boolean =
+        Files.list(installDir).use { paths ->
             paths.anyMatch { path ->
                 Files.isDirectory(path) &&
                         path.fileName
                             .toString()
-                            .startsWith("chromium-")
+                            .startsWith(prefix)
             }
         }
-    }
 
     override fun install(
         progressHandler: RuntimeProgressHandler?
@@ -72,7 +73,7 @@ class PlaywrightRuntimeInstaller(
         )
 
         try {
-            installChromium()
+            installChromium(progressHandler)
 
             Files.writeString(
                 installMarker,
@@ -92,15 +93,17 @@ class PlaywrightRuntimeInstaller(
         }
     }
 
-    private fun installChromium() {
+    private fun installChromium(
+        progressHandler: RuntimeProgressHandler?
+    ) {
+
         val javaExecutable =
             Path.of(
                 System.getProperty("java.home"),
                 "bin",
                 if (isWindows()) "java.exe" else "java"
             )
-
-        val process =
+        val processBuilder =
             ProcessBuilder(
                 javaExecutable.toString(),
                 "-cp",
@@ -109,43 +112,49 @@ class PlaywrightRuntimeInstaller(
                 "install",
                 "chromium"
             ).apply {
+
                 environment()[PLAYWRIGHT_BROWSERS_PATH] =
                     installDir
                         .toAbsolutePath()
                         .normalize()
                         .toString()
 
-                // De installatie moet juist wél mogen downloaden,
-                // ongeacht wat het hoofdproces gebruikt.
                 environment()
-                    .remove(PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD)
+                    .remove(
+                        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
+                    )
 
-                // Voor nu zien we Playwrights eigen voortgang
-                // gewoon in de console.
-                inheritIO()
+                redirectErrorStream(true)
             }
-                .start()
 
-        val finished =
-            process.waitFor(
-                10,
-                TimeUnit.MINUTES
-            )
+        val process =
+            processBuilder.start()
 
-        if (!finished) {
-            process.destroyForcibly()
+        val playwrightProgressHandler =
+            progressHandler?.let {
+                PlaywrightProgressHandler(it)
+            }
 
-            throw IllegalStateException(
-                "Timeout tijdens installatie van Playwright Chromium"
-            )
-        }
+        val outputThread =
+            Thread {
+                process.inputStream
+                    .bufferedReader()
+                    .useLines { lines ->
 
-        if (process.exitValue() != 0) {
-            throw IllegalStateException(
-                "Installatie van Playwright Chromium is mislukt " +
-                        "met exitcode ${process.exitValue()}"
-            )
-        }
+                        lines.forEach { line ->
+
+                            // Console-output behouden
+                            println(line)
+
+                            playwrightProgressHandler
+                                ?.handle(line)
+                        }
+                    }
+            }.apply {
+                name = "playwright-install-output"
+                isDaemon = true
+                start()
+            }
     }
 
     private fun currentVersion(): String? =

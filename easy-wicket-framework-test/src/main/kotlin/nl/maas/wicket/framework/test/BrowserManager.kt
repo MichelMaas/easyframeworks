@@ -15,6 +15,9 @@ class BrowserManager private constructor() : ApplicationListener<ApplicationRead
     private lateinit var appContext: ApplicationContext
     val viewer = Viewers.viewer
     private fun startBrowser() {
+        viewer.onCloseRequest {
+            System.exit(0)
+        }
         viewer.startBrowser("http://localhost:8080", "wicket-test")
     }
 

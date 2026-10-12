@@ -5,7 +5,7 @@ import nl.maas.wicket.framework.viewer.components.RuntimePreparationDialog
 import org.apache.commons.lang3.StringUtils
 import javax.swing.SwingUtilities
 
-class SwingRuntimeProgressHandler(
+class JCEFRuntimeProgressHandler(
     private val dialog: RuntimePreparationDialog
 ) : RuntimeProgressHandler {
 

@@ -43,11 +43,23 @@ internal class CEFViewer() : Viewer() {
 
 
     override fun close() {
-        SwingUtilities.invokeLater {
-            frame.dispose()
+        if (::frame.isInitialized) {
+            SwingUtilities.invokeLater {
+                frame.dispose()
+            }
         }
 
-        browser.doClose()
+        if (::browser.isInitialized) {
+            browser.close(true)
+        }
+
+        if (::client.isInitialized) {
+            client.dispose()
+        }
+
+        if (::app.isInitialized) {
+            app.dispose()
+        }
     }
 
     override fun setBrowserLocation(location: Path?) {

@@ -1,6 +1,6 @@
 package nl.maas.wicket.framework.viewer.components
 
-import nl.maas.wicket.framework.services.SwingRuntimeProgressHandler
+import nl.maas.wicket.framework.services.JCEFRuntimeProgressHandler
 import javax.swing.SwingUtilities
 
 class SwingRuntimePreparationUi(
@@ -11,7 +11,7 @@ class SwingRuntimePreparationUi(
         RuntimePreparationDialog(applicationName)
 
     override val progressHandler =
-        SwingRuntimeProgressHandler(dialog)
+        JCEFRuntimeProgressHandler(dialog)
 
     override fun show() {
         SwingUtilities.invokeLater {

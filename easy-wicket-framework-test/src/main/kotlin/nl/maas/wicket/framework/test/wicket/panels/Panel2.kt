@@ -3,6 +3,7 @@ package nl.maas.wicket.framework.test.wicket.panels
 import nl.maas.wicket.framework.components.base.DynamicPanel
 import nl.maas.wicket.framework.panels.RIAPanel
 import nl.maas.wicket.framework.test.wicket.caches.ModelCache
+import nl.maas.wicket.framework.viewer.ScrapeViewer
 import nl.maas.wicket.framework.viewer.Viewers
 import org.apache.wicket.Component
 import org.apache.wicket.markup.html.basic.Label
@@ -12,10 +13,14 @@ class Panel2 : RIAPanel() {
 
     @SpringBean
     private lateinit var modelCache: ModelCache
+    private lateinit var scraper: ScrapeViewer
+    override fun onInitialize() {
+        super.onInitialize()
+        scraper = Viewers.scraper
+    }
 
     override fun onBeforeRender() {
         super.onBeforeRender()
-        val scraper = Viewers.scraper
         scraper.startBrowser("https://www.nu.nl", "wicket-test")
         val items = scraper.findElementsByClass("app-nav-item").map { it.text }
         addOrReplace(createContent(items))

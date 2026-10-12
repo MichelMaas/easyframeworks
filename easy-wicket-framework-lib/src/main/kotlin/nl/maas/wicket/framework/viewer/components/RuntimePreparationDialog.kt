@@ -30,8 +30,8 @@ class RuntimePreparationDialog(
         val explanationLabel = JLabel(
             """
             <html>
-            De applicatie wordt voorbereid voor gebruik.<br>
-            Benodigde onderdelen worden automatisch geïnstalleerd.
+            Benodigde onderdelen worden voorbereid voor gebruik.
+            Dit kan de eerste keer wat langer duren.
             </html>
             """.trimIndent()
         )
@@ -53,7 +53,7 @@ class RuntimePreparationDialog(
                 JLabel(
                     """
                     <html>
-                    De applicatie start automatisch zodra de voorbereiding klaar is.
+                        Dit venster sluit automatisch zodra de voorbereiding is voltooid.                  
                     </html>
                     """.trimIndent()
                 )
