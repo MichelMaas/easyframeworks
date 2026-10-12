@@ -6,6 +6,7 @@ import nl.maas.wicket.framework.services.PlaywrightProgressHandler
 import nl.maas.wicket.framework.services.RuntimeProgressHandler
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.concurrent.TimeUnit
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
 
@@ -155,6 +156,30 @@ class PlaywrightRuntimeInstaller(
                 isDaemon = true
                 start()
             }
+
+        val finished =
+            process.waitFor(
+                10,
+                TimeUnit.MINUTES
+            )
+
+        if (!finished) {
+            process.destroyForcibly()
+            outputThread.join(1000)
+
+            throw IllegalStateException(
+                "Timeout tijdens installatie van Playwright Chromium"
+            )
+        }
+
+        outputThread.join()
+
+        if (process.exitValue() != 0) {
+            throw IllegalStateException(
+                "Installatie van Playwright Chromium is mislukt " +
+                        "met exitcode ${process.exitValue()}"
+            )
+        }
     }
 
     private fun currentVersion(): String? =
