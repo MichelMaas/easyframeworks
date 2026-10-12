@@ -49,20 +49,20 @@ internal class PlaywrightScrapeViewer() : ScrapeViewer() {
     }
 
     override fun setBrowserLocation(location: String?) {
-
-        val path = location?.let {
-            if (Path.of(it, "playwright").exists()) {
+        location?.let {
+            val path = if (Path.of(it, "playwright").exists()) {
                 Path.of(it)
             } else {
                 Path.of(System.getProperty(it))
             }
-        } ?: FileUtils.getPathFromCache("playwright", "easy-wicket-framework")!!
-        options = Playwright.CreateOptions()
-        val env = System.getenv().toMutableMap()
+            options = Playwright.CreateOptions()
+            val env = System.getenv().toMutableMap()
 
-        env[PLAYWRIGHT_BROWSERS_PATH] =
-            path.toAbsolutePath().toString()
-        options.setEnv(env)
+            env[PLAYWRIGHT_BROWSERS_PATH] =
+                path.absolutePathString()
+            options.setEnv(env)
+        }
+
     }
 
     override fun navigateTo(url: String): Boolean {
