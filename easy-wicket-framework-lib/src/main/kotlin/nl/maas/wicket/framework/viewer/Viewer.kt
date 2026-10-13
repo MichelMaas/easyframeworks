@@ -22,7 +22,7 @@ abstract class Viewer protected constructor(
         url: String = "http://localhost:8080", appName: String = "App"
     )
 
-    abstract fun setBrowserLocation(location: Path? = null)
+    protected abstract fun setBrowserLocation(location: Path? = null)
 
     abstract fun close()
 
