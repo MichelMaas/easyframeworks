@@ -2,7 +2,6 @@ package nl.maas.framework.io.utils
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import org.apache.commons.lang3.StringUtils
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -12,9 +11,12 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 
 object FileUtils {
-    fun findFileOrFolder(fileName: String, appFolder: String = System.getProperty("appFolder")): String {
+    fun findFileOrFolder(fileName: String, appFolder: String = System.getProperty("appFolder")): String? {
         val files = runBlocking {
-            if (Files.exists(Path.of(appFolder, fileName))) listOf(Path.of(appFolder, fileName)) else async {
+            if (Files.exists(Path.of(appFolder, fileName))) listOf(Path.of(appFolder, fileName)) else if (Files.exists(
+                    Path.of(appFolder)
+                )
+            ) async {
                 Files.find(
                     Paths.get(appFolder).toAbsolutePath(), 5,
                     BiPredicate({ path, basicFileAttributes ->
@@ -22,10 +24,11 @@ object FileUtils {
                     })
                 )
             }.await().collect(Collectors.toList())
+            else listOf()
         }
         return runBlocking {
-            files.firstOrNull() { async { it.toRealPath().toString().contains(appFolder) }.await() }?.toRealPath()
-                .toString() ?: StringUtils.EMPTY
+            files.firstOrNull() { async { it.toRealPath().toString().contains(appFolder) }.await() }
+                ?.absolutePathString()
         }
     }
 

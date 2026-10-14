@@ -34,7 +34,7 @@ class Panel1 : RIAPanel() {
                         AppDirectories.appDir(appName),
                         AppDirectories.dataDir(appName),
                         AppDirectories.cacheDir(appName)
-                    )?.let { it.readText() }
+                    )?.readText()
                         ?: "Je hebt me niet gevonden!!!"
                 )
             )
