@@ -8,7 +8,7 @@
     </parent>
 
     <groupId>nl.maas.framework</groupId>
-    <version>2026.03-SNAPSHOT</version>
+    <version>2026.03</version>
     <artifactId>easy-frameworks</artifactId>
     <packaging>pom</packaging>
 
@@ -32,7 +32,7 @@
             https://github.com/MichelMaas/easyframeworks
         </url>
 
-        <tag>HEAD</tag>
+        <tag>easy-frameworks-2026.03</tag>
     </scm>
 
     <properties>
