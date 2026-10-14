@@ -6,14 +6,14 @@ import nl.maas.wicket.framework.viewer.components.RuntimePreparationUi
 import java.nio.file.Path
 
 class RuntimeManager(appName: String) {
-    private val cacheDir = AppDirectories.cacheDir(appName)
+    private val appDir = AppDirectories.dataDir(appName)
 
     private val installers = mapOf(
         RuntimeRequirement.JCEF to
-                JcefRuntimeInstaller(cacheDir.resolve("jcef")),
+                JcefRuntimeInstaller(appDir.resolve("jcef")),
 
         RuntimeRequirement.PLAYWRIGHT to
-                PlaywrightRuntimeInstaller(cacheDir.resolve("playwright"))
+                PlaywrightRuntimeInstaller(appDir.resolve("playwright"))
     )
 
     fun isAvailable(requirement: RuntimeRequirement): Boolean =

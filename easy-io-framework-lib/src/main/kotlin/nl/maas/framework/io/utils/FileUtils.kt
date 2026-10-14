@@ -3,24 +3,22 @@ package nl.maas.framework.io.utils
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.function.BiPredicate
 import java.util.stream.Collectors
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 
 object FileUtils {
     fun findFileOrFolder(fileName: String, appFolder: String = System.getProperty("appFolder")): String {
         val files = runBlocking {
-            if (Files.exists(Path.of(fileName))) listOf(Path.of(fileName)) else async {
+            if (Files.exists(Path.of(appFolder, fileName))) listOf(Path.of(appFolder, fileName)) else async {
                 Files.find(
-                    Paths.get("").toRealPath(), 5,
+                    Paths.get(appFolder).toAbsolutePath(), 5,
                     BiPredicate({ path, basicFileAttributes ->
-                        val file: File = path.toFile()
-                        !file.isDirectory() &&
-                                file.absolutePath.endsWith(fileName, true)
+                        path.resolve(fileName).exists()
                     })
                 )
             }.await().collect(Collectors.toList())
@@ -31,8 +29,25 @@ object FileUtils {
         }
     }
 
+    fun findFileOrFolderInAnyOf(fileName: String, vararg appFolder: Path): Path? {
+        val found =
+            appFolder.map { findFileOrFolder(fileName, it.absolutePathString()) }.filterNotNull().firstOrNull()
+        return found?.let { Path.of(it) }
+    }
+
+    fun findFileOrFolderInAnyAppFolder(fileName: String, appName: String): Path? {
+        return findFileOrFolderInAnyOf(
+            fileName, AppDirectories.appDir(appName), AppDirectories.dataDir(appName),
+            AppDirectories.cacheDir(appName)
+        )
+    }
+
     fun getPathFromCache(fileName: String, appName: String): Path? {
         return AppDirectories.cacheDir(appName).resolve(fileName)
+    }
+
+    fun getPathFromData(fileName: String, appName: String): Path? {
+        return AppDirectories.dataDir(appName).resolve(fileName)
     }
 
     fun pathFromResourceOrPath(path: String): Path? {
@@ -42,7 +57,7 @@ object FileUtils {
     }
 
     fun pathFromResourceOrPath(path: Path): Path? {
-        return pathFromResourceOrPath(path.toString())
+        return pathFromResourceOrPath(path.absolutePathString())
     }
 
 }
