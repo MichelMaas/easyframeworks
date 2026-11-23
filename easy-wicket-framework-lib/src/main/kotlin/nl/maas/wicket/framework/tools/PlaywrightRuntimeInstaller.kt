@@ -4,6 +4,7 @@ import com.microsoft.playwright.Playwright
 import nl.maas.wicket.framework.objects.enums.RuntimeRequirement
 import nl.maas.wicket.framework.services.PlaywrightProgressHandler
 import nl.maas.wicket.framework.services.RuntimeProgressHandler
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.TimeUnit
@@ -106,12 +107,7 @@ class PlaywrightRuntimeInstaller(
             )
         val processBuilder =
             ProcessBuilder(
-                javaExecutable.toString(),
-                "-cp",
-                System.getProperty("java.class.path"),
-                "com.microsoft.playwright.CLI",
-                "install",
-                "chromium"
+                createInstallCommand(javaExecutable)
             ).apply {
 
                 environment()[PLAYWRIGHT_BROWSERS_PATH] =
@@ -178,6 +174,39 @@ class PlaywrightRuntimeInstaller(
             throw IllegalStateException(
                 "Installatie van Playwright Chromium is mislukt " +
                         "met exitcode ${process.exitValue()}"
+            )
+        }
+    }
+
+    private fun createInstallCommand(javaExecutable: Path): List<String> {
+        val classPath = System.getProperty("java.class.path")
+
+        val springBootJar = classPath
+            .split(File.pathSeparator)
+            .map { Path.of(it) }
+            .firstOrNull { path ->
+                Files.isRegularFile(path) &&
+                        path.fileName.toString().endsWith("-exec.jar")
+            }
+
+        return if (springBootJar != null) {
+            listOf(
+                javaExecutable.toString(),
+                "-Dloader.main=com.microsoft.playwright.CLI",
+                "-cp",
+                springBootJar.toString(),
+                "org.springframework.boot.loader.launch.PropertiesLauncher",
+                "install",
+                "chromium"
+            )
+        } else {
+            listOf(
+                javaExecutable.toString(),
+                "-cp",
+                classPath,
+                "com.microsoft.playwright.CLI",
+                "install",
+                "chromium"
             )
         }
     }

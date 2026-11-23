@@ -2,6 +2,7 @@ package nl.maas.framework.io.utils
 
 import java.io.File
 import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 
 object AppDirectories {
 
@@ -32,7 +33,7 @@ object AppDirectories {
             }
         }
 
-        return appName?.let { base.resolve(appName) } ?: base
+        return appName?.let { base.resolve(appName.lowercase()) } ?: base
     }
 
     fun dataDir(appName: String): Path {
@@ -50,7 +51,7 @@ object AppDirectories {
                         ?.takeIf { it.isNotBlank() }
 
                 if (localAppData != null) {
-                    Path.of(localAppData, appName)
+                    Path.of(localAppData, appName.lowercase())
                 } else {
                     userHome
                         .resolve("AppData")
@@ -90,10 +91,9 @@ object AppDirectories {
                 ?.let { add(Path.of(it)) }
         }
 
-        return candidates
-            .asSequence()
-            .mapNotNull { findAncestor(it, appName) }
-            .firstOrNull() ?: dataDir(appName)
+        return candidates.filterNotNull().filter { it.absolutePathString().contains(appName, true) }
+            .mapNotNull { findAncestor(it, appName.lowercase()) }
+            .firstOrNull() ?: dataDir(appName.lowercase())
     }
 
     private fun findAncestor(
@@ -106,7 +106,7 @@ object AppDirectories {
         while (current != null) {
             if (current.fileName
                     ?.toString()
-                    ?.equals(name, ignoreCase = true) == true
+                    ?.equals(name, ignoreCase = true) ?: false
             ) {
                 return current
             }

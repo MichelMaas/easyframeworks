@@ -2,6 +2,7 @@ package nl.maas.wicket.framework.test
 
 import jakarta.inject.Inject
 import nl.maas.framework.io.utils.AppDirectories
+import nl.maas.framework.io.utils.FileUtils
 import nl.maas.wicket.framework.viewer.Viewers
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.ApplicationContext
@@ -19,6 +20,8 @@ class BrowserManager private constructor() : ApplicationListener<ApplicationRead
 
     private fun startBrowser() {
         AppDirectories.appDir(appName)
+
+        FileUtils.findFileOrFolderInAnyAppFolder("FileRenamer.png", "FileRenamer")
         viewer.onCloseRequest {
             System.exit(0)
         }
